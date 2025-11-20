@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quotation Pipeline Prototype</title>
+  <style>
+    * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+    body { margin: 0; display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: #111827; color: white; padding: 16px; }
+    .main { flex: 1; display: flex; flex-direction: column; background: #f3f4f6; }
+    .topbar { display: flex; justify-content: space-between; padding: 12px 20px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .content { flex: 1; display: flex; overflow: hidden; }
+    .board { flex: 1; padding: 16px; display: flex; gap: 12px; overflow-x: auto; }
+    .column { flex: 1; min-width: 220px; background: rgba(255,255,255,0.9); border-radius: 8px; border: 1px solid #e5e7eb; }
+    .column h3 { margin: 0; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+    .card { margin: 10px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5f5; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: grab; }
+    .card strong { display: block; }
+    .card .actions { margin-top: 8px; display: flex; gap: 6px; }
+    .card button { border: 0; padding: 4px 8px; border-radius: 4px; background: #2563eb; color: white; font-size: 12px; }
+    .detail-drawer { position: absolute; top: 0; right: -400px; width: 360px; height: 100%; background: #fff; border-left: 1px solid #e5e7eb; box-shadow:-2px 0 6px rgba(0,0,0,0.08); padding: 16px; transition: right 0.3s ease; overflow-y: auto; }
+    .detail-drawer.open { right: 0; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>Ecme</h2>
+    <p>Menu ...</p>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <h1>Quotes — Pipeline</h1>
+      <button onclick="toggleList()">List View</button>
+    </div>
+    <div class="content">
+      <section class="board">
+        <div class="column">
+          <h3>DRAFT</h3>
+          <div class="card" onclick="openDrawer('QTN-2025-0001', 'ACME Corp', 'DRAFT')">
+            <strong>#QTN-0001</strong>
+            Customer: ACME<br/>
+            Owner: Admin<br/>
+            Total: 1,500,000<br/>
+            <div class="actions">
+              <button>Submit</button>
+              <button>Clone</button>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <h3>SUBMITTED</h3>
+          <div class="card" onclick="openDrawer('QTN-2025-0002', 'Fubon Bank', 'SUBMITTED')">
+            <strong>#QTN-0002</strong>
+            Customer: Fubon<br/>
+            Owner: Sales1<br/>
+            Total: 2,850,000<br/>
+            <div class="actions">
+              <button>Approve</button>
+              <button>Reject</button>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <h3>APPROVED</h3>
+          <div class="card" onclick="openDrawer('QTN-2025-0003', 'Unicorn', 'APPROVED')">
+            <strong>#QTN-0003</strong>
+            Customer: Unicorn<br/>
+            Owner: SalesVP<br/>
+            Total: 3,200,000<br/>
+            <div class="actions">
+              <button>Set Active</button>
+              <button>Convert</button>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <h3>EXPIRED</h3>
+        </div>
+        <div class="column">
+          <h3>CANCELLED</h3>
+        </div>
+      </section>
+      <aside class="detail-drawer" id="drawer">
+        <button style="float:right" onclick="closeDrawer()">✕</button>
+        <h2 id="drawerTitle">Quote Details</h2>
+        <p id="drawerInfo">Customer / Status / Amount</p>
+        <hr/>
+        <h3>Actions</h3>
+        <button>SUBMIT</button>
+        <button>APPROVE</button>
+        <button>CANCEL</button>
+        <h3>Associations</h3>
+        <ul>
+          <li>Contact: Jane Chen</li>
+          <li>Sales Order: SO-2025-1001</li>
+        </ul>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const drawer = document.getElementById('drawer');
+    function openDrawer(no, customer, status) {
+      drawer.querySelector('#drawerTitle').innerText = no;
+      drawer.querySelector('#drawerInfo').innerText = `Customer: ${customer} | Status: ${status}`;
+      drawer.classList.add('open');
+    }
+    function closeDrawer() { drawer.classList.remove('open'); }
+    function toggleList() {
+      alert('切換至 List View');
+    }
+  </script>
+</body>
+</html>

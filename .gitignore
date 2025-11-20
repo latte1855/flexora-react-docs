@@ -1,0 +1,48 @@
+# OS / 編輯器暫存檔
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 編輯器
+.vscode/
+.idea/
+*.iml
+
+# Node / 前端工具（如果之後 docs 會用到 node 工具）
+node_modules/
+dist/
+build/
+.cache/
+.npm/
+.yarn/
+.pnp.*
+.pnp.js
+
+# Python / Sphinx / MkDocs 等（預留）
+venv/
+.env/
+__pycache__/
+*.pyc
+site/
+
+# 產生出來的文件快照（避免誤 commit 過大檔）
+*.log
+*.tmp
+*.bak
+~$*.docx
+~$*.xlsx
+
+# 匯出的二進位檔（視情況可拿掉）
+*.pdf
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# 系統自動產生的圖表或中繼檔（例如 PlantUML）
+*.png
+*.svg
+*.uml.cache
+
+# OS 語系相關
+ehthumbs.db

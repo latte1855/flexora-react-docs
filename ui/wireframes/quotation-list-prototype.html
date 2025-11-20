@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quotation List Prototype</title>
+  <style>
+    * { box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif; }
+    body { margin: 0; display: flex; height: 100vh; color: #333; }
+    .sidebar { width: 220px; background: #1f2937; color: #f3f4f6; padding: 16px; overflow-y: auto; }
+    .sidebar h2 { font-size: 18px; margin-top: 0; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 8px 0; }
+    .sidebar .active { color: #fde047; font-weight: bold; }
+
+    .main { flex: 1; display: flex; flex-direction: column; background: #f9fafb; }
+    .topbar { display: flex; justify-content: space-between; padding: 12px 20px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .topbar .actions button { margin-left: 8px; }
+
+    .content { flex: 1; display: flex; overflow: hidden; position: relative; }
+    .lists-panel { width: 260px; background: #fff; border-right: 1px solid #e5e7eb; padding: 16px; overflow-y: auto; }
+    .lists-panel input { width: 100%; padding: 8px; margin-bottom: 16px; border: 1px solid #d1d5db; border-radius: 4px; }
+    .lists-panel h3 { margin-top: 0; }
+
+    .quotes-panel { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; }
+    .panel-header h1 { margin: 0; }
+    .panel-header button { padding: 8px 12px; background: #2563eb; color: #fff; border: 0; border-radius: 4px; }
+
+    .toggle { background: #fff; border: 1px solid #e5e7eb; border-radius: 20px; display: inline-flex; }
+    .toggle button { border: 0; padding: 6px 16px; background: transparent; }
+    .toggle .active { background: #2563eb; color: #fff; border-radius: 20px; }
+
+    .filters { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .filters label { display: flex; flex-direction: column; font-size: 12px; font-weight: 600; color: #6b7280; }
+    .filters input { margin-top: 4px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; }
+    .filters .submit { grid-column: span 3; text-align: right; }
+    .filters .submit button { padding: 8px 16px; background: #047857; color: #fff; border: 0; border-radius: 4px; }
+
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    th { background: #f3f4f6; font-size: 13px; text-transform: uppercase; color: #6b7280; }
+    tbody tr:hover { background: #eef2ff; cursor: pointer; }
+
+    .pagination { display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-size: 13px; }
+    .pagination select, .pagination input { padding: 4px; }
+
+    .detail-drawer { position: absolute; top: 0; right: -400px; width: 360px; height: 100%; background: #fff; border-left: 1px solid #e5e7eb; box-shadow: -2px 0 6px rgba(0,0,0,0.08); padding: 16px; transition: right 0.3s ease; overflow-y: auto; }
+    .detail-drawer.open { right: 0; }
+    .detail-drawer h2 { margin-top: 0; }
+    .summary-card, .guard-card, .assoc-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .summary-card dt { font-weight: 600; margin-top: 4px; }
+    .guard-card .warning { color: #b45309; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>Ecme</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Marketing</li>
+      <li>Sales</li>
+      <li class="active">Quotes</li>
+      <li>Inventory</li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>Quotes</div>
+      <div class="actions">
+        <button>+</button>
+        <button>Calendar</button>
+        <button>Task</button>
+        <button>🔔</button>
+        <button>👤</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <section class="lists-panel">
+        <input type="text" placeholder="Search List..." />
+        <h3>My Lists</h3>
+        <ul>
+          <li>Open Quotes</li>
+          <li>Rejected Quotes</li>
+        </ul>
+        <h3>Shared</h3>
+        <ul><li>All</li></ul>
+        <h3>Tags</h3>
+        <ul>
+          <li>VIP</li>
+          <li>重要</li>
+        </ul>
+      </section>
+
+      <section class="quotes-panel">
+        <div class="panel-header">
+          <h1>Quotes</h1>
+          <div class="toggle">
+            <button class="active">List</button>
+            <button>Pipeline</button>
+          </div>
+          <button>+ Add</button>
+        </div>
+
+        <div class="filters">
+          <label>Subject<input type="text" /></label>
+          <label>Stage<input type="text" /></label>
+          <label>Opportunity<input type="text" /></label>
+          <label>Organization<input type="text" /></label>
+          <label>Total<input type="text" /></label>
+          <label>Assigned To<input type="text" /></label>
+          <div class="submit"><button>Apply Filters</button></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th><th>Stage</th><th>Opportunity</th><th>Organization</th><th>Total</th><th>Assigned To</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025年AI專案授權</td>
+              <td><span style="color:#1d4ed8;">Created</span></td>
+              <td>AI 軟體授權合作</td>
+              <td>ACME Corp</td>
+              <td>1,500,000</td>
+              <td>Admin</td>
+            </tr>
+            <tr>
+              <td>2025 CRM 系統建置</td>
+              <td><span style="color:#92400e;">Delivered</span></td>
+              <td>CRM 導入專案</td>
+              <td>Fubon Bank</td>
+              <td>2,850,000</td>
+              <td>Team Seller</td>
+            </tr>
+            <tr>
+              <td>雲端運算平台租賃</td>
+              <td>Accepted</td>
+              <td>Cloud 租賃合約</td>
+              <td>Unicorn Startups</td>
+              <td>680,000</td>
+              <td>Marketing</td>
+            </tr>
+            <tr>
+              <td>電子發票平台採購</td>
+              <td>Reviewed</td>
+              <td>E-Invoice Solution</td>
+              <td>台灣大電信</td>
+              <td>950,000</td>
+              <td>Support CS</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <span>Rows per page:</span>
+          <select><option>10</option><option>20</option></select>
+          <span>Jump to:</span>
+          <input type="number" min="1" value="1" style="width:60px;" />
+          <button>Go</button>
+          <span>1–4 of 4</span>
+          <button>&lt;</button>
+          <button>&gt;</button>
+        </div>
+      </section>
+
+      <aside class="detail-drawer" id="detailDrawer">
+        <button onclick="closeDrawer()" style="float:right;">Close ✕</button>
+        <h2>Quote Summary</h2>
+        <dl class="summary-card">
+          <dt>Thread No</dt><dd id="summaryThread">QTN-2025-0001</dd>
+          <dt>Customer</dt><dd id="summaryCustomer">ACME Corp</dd>
+          <dt>Status</dt><dd id="summaryStatus"><span style="color:#1d4ed8;">SUBMITTED</span></dd>
+          <dt>Valid Until</dt><dd id="summaryValid">2025-12-31</dd>
+          <dt>Total</dt><dd id="summaryTotal">NT$ 1,500,000</dd>
+        </dl>
+        <div class="guard-card">
+          <strong>Workflow Guard</strong>
+          <p class="warning">• 有效期限需更新</p>
+          <p class="warning">• 至少一筆報價明細</p>
+          <button>SUBMIT</button>
+          <button>CANCEL</button>
+          <button>CLONE</button>
+        </div>
+        <div class="assoc-card">
+          <strong>Contacts</strong>
+          <ul>
+            <li>Jane Chen — Account Manager</li>
+            <li>Alex Wu — Technical Lead</li>
+          </ul>
+        </div>
+        <div class="assoc-card">
+          <strong>Related Sales Orders</strong>
+          <ul>
+            <li>SO-2025-1001 — Confirmed — 1,200,000</li>
+            <li>SO-2025-1002 — Draft — 300,000</li>
+          </ul>
+          <button>Create SO</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const rows = document.querySelectorAll('tbody tr');
+    const drawer = document.getElementById('detailDrawer');
+    rows.forEach(row => {
+      row.addEventListener('click', () => {
+        drawer.classList.add('open');
+      });
+    });
+    function closeDrawer() {
+      drawer.classList.remove('open');
+    }
+  </script>
+</body>
+</html>

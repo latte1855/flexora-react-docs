@@ -1,0 +1,1505 @@
+<!doctype html>
+<html>
+  <head>
+    <title>API 清單（含用途說明）</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="file:////Users/takk/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.8.19/crossnote/dependencies/katex/katex.min.css"
+    />
+
+    <style>
+      code[class*='language-'],
+      pre[class*='language-'] {
+        color: #333;
+        background: 0 0;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        text-align: left;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        line-height: 1.4;
+        -moz-tab-size: 8;
+        -o-tab-size: 8;
+        tab-size: 8;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+      }
+      pre[class*='language-'] {
+        padding: 0.8em;
+        overflow: auto;
+        border-radius: 3px;
+        background: #f5f5f5;
+      }
+      :not(pre) > code[class*='language-'] {
+        padding: 0.1em;
+        border-radius: 0.3em;
+        white-space: normal;
+        background: #f5f5f5;
+      }
+      .token.blockquote,
+      .token.comment {
+        color: #969896;
+      }
+      .token.cdata {
+        color: #183691;
+      }
+      .token.doctype,
+      .token.macro.property,
+      .token.punctuation,
+      .token.variable {
+        color: #333;
+      }
+      .token.builtin,
+      .token.important,
+      .token.keyword,
+      .token.operator,
+      .token.rule {
+        color: #a71d5d;
+      }
+      .token.attr-value,
+      .token.regex,
+      .token.string,
+      .token.url {
+        color: #183691;
+      }
+      .token.atrule,
+      .token.boolean,
+      .token.code,
+      .token.command,
+      .token.constant,
+      .token.entity,
+      .token.number,
+      .token.property,
+      .token.symbol {
+        color: #0086b3;
+      }
+      .token.prolog,
+      .token.selector,
+      .token.tag {
+        color: #63a35c;
+      }
+      .token.attr-name,
+      .token.class,
+      .token.class-name,
+      .token.function,
+      .token.id,
+      .token.namespace,
+      .token.pseudo-class,
+      .token.pseudo-element,
+      .token.url-reference .token.variable {
+        color: #795da3;
+      }
+      .token.entity {
+        cursor: help;
+      }
+      .token.title,
+      .token.title .token.punctuation {
+        font-weight: 700;
+        color: #1d3e81;
+      }
+      .token.list {
+        color: #ed6a43;
+      }
+      .token.inserted {
+        background-color: #eaffea;
+        color: #55a532;
+      }
+      .token.deleted {
+        background-color: #ffecec;
+        color: #bd2c00;
+      }
+      .token.bold {
+        font-weight: 700;
+      }
+      .token.italic {
+        font-style: italic;
+      }
+      .language-json .token.property {
+        color: #183691;
+      }
+      .language-markup .token.tag .token.punctuation {
+        color: #333;
+      }
+      .language-css .token.function,
+      code.language-css {
+        color: #0086b3;
+      }
+      .language-yaml .token.atrule {
+        color: #63a35c;
+      }
+      code.language-yaml {
+        color: #183691;
+      }
+      .language-ruby .token.function {
+        color: #333;
+      }
+      .language-markdown .token.url {
+        color: #795da3;
+      }
+      .language-makefile .token.symbol {
+        color: #795da3;
+      }
+      .language-makefile .token.variable {
+        color: #183691;
+      }
+      .language-makefile .token.builtin {
+        color: #0086b3;
+      }
+      .language-bash .token.keyword {
+        color: #0086b3;
+      }
+      pre[data-line] {
+        position: relative;
+        padding: 1em 0 1em 3em;
+      }
+      pre[data-line] .line-highlight-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: transparent;
+        display: block;
+        width: 100%;
+      }
+      pre[data-line] .line-highlight {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: inherit 0;
+        margin-top: 1em;
+        background: hsla(24, 20%, 50%, 0.08);
+        background: linear-gradient(to right, hsla(24, 20%, 50%, 0.1) 70%, hsla(24, 20%, 50%, 0));
+        pointer-events: none;
+        line-height: inherit;
+        white-space: pre;
+      }
+      pre[data-line] .line-highlight:before,
+      pre[data-line] .line-highlight[data-end]:after {
+        content: attr(data-start);
+        position: absolute;
+        top: 0.4em;
+        left: 0.6em;
+        min-width: 1em;
+        padding: 0 0.5em;
+        background-color: hsla(24, 20%, 50%, 0.4);
+        color: #f4f1ef;
+        font: bold 65%/1.5 sans-serif;
+        text-align: center;
+        vertical-align: 0.3em;
+        border-radius: 999px;
+        text-shadow: none;
+        box-shadow: 0 1px #fff;
+      }
+      pre[data-line] .line-highlight[data-end]:after {
+        content: attr(data-end);
+        top: auto;
+        bottom: 0.4em;
+      }
+      html body {
+        font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        background-color: #fff;
+        overflow: initial;
+        box-sizing: border-box;
+        word-wrap: break-word;
+      }
+      html body > :first-child {
+        margin-top: 0;
+      }
+      html body h1,
+      html body h2,
+      html body h3,
+      html body h4,
+      html body h5,
+      html body h6 {
+        line-height: 1.2;
+        margin-top: 1em;
+        margin-bottom: 16px;
+        color: #000;
+      }
+      html body h1 {
+        font-size: 2.25em;
+        font-weight: 300;
+        padding-bottom: 0.3em;
+      }
+      html body h2 {
+        font-size: 1.75em;
+        font-weight: 400;
+        padding-bottom: 0.3em;
+      }
+      html body h3 {
+        font-size: 1.5em;
+        font-weight: 500;
+      }
+      html body h4 {
+        font-size: 1.25em;
+        font-weight: 600;
+      }
+      html body h5 {
+        font-size: 1.1em;
+        font-weight: 600;
+      }
+      html body h6 {
+        font-size: 1em;
+        font-weight: 600;
+      }
+      html body h1,
+      html body h2,
+      html body h3,
+      html body h4,
+      html body h5 {
+        font-weight: 600;
+      }
+      html body h5 {
+        font-size: 1em;
+      }
+      html body h6 {
+        color: #5c5c5c;
+      }
+      html body strong {
+        color: #000;
+      }
+      html body del {
+        color: #5c5c5c;
+      }
+      html body a:not([href]) {
+        color: inherit;
+        text-decoration: none;
+      }
+      html body a {
+        color: #08c;
+        text-decoration: none;
+      }
+      html body a:hover {
+        color: #00a3f5;
+        text-decoration: none;
+      }
+      html body img {
+        max-width: 100%;
+      }
+      html body > p {
+        margin-top: 0;
+        margin-bottom: 16px;
+        word-wrap: break-word;
+      }
+      html body > ol,
+      html body > ul {
+        margin-bottom: 16px;
+      }
+      html body ol,
+      html body ul {
+        padding-left: 2em;
+      }
+      html body ol.no-list,
+      html body ul.no-list {
+        padding: 0;
+        list-style-type: none;
+      }
+      html body ol ol,
+      html body ol ul,
+      html body ul ol,
+      html body ul ul {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      html body li {
+        margin-bottom: 0;
+      }
+      html body li.task-list-item {
+        list-style: none;
+      }
+      html body li > p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      html body .task-list-item-checkbox {
+        margin: 0 0.2em 0.25em -1.8em;
+        vertical-align: middle;
+      }
+      html body .task-list-item-checkbox:hover {
+        cursor: pointer;
+      }
+      html body blockquote {
+        margin: 16px 0;
+        font-size: inherit;
+        padding: 0 15px;
+        color: #5c5c5c;
+        background-color: #f0f0f0;
+        border-left: 4px solid #d6d6d6;
+      }
+      html body blockquote > :first-child {
+        margin-top: 0;
+      }
+      html body blockquote > :last-child {
+        margin-bottom: 0;
+      }
+      html body hr {
+        height: 4px;
+        margin: 32px 0;
+        background-color: #d6d6d6;
+        border: 0 none;
+      }
+      html body table {
+        margin: 10px 0 15px 0;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: block;
+        width: 100%;
+        overflow: auto;
+        word-break: normal;
+        word-break: keep-all;
+      }
+      html body table th {
+        font-weight: 700;
+        color: #000;
+      }
+      html body table td,
+      html body table th {
+        border: 1px solid #d6d6d6;
+        padding: 6px 13px;
+      }
+      html body dl {
+        padding: 0;
+      }
+      html body dl dt {
+        padding: 0;
+        margin-top: 16px;
+        font-size: 1em;
+        font-style: italic;
+        font-weight: 700;
+      }
+      html body dl dd {
+        padding: 0 16px;
+        margin-bottom: 16px;
+      }
+      html body code {
+        font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+        font-size: 0.85em;
+        color: #000;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+        padding: 0.2em 0;
+      }
+      html body code::after,
+      html body code::before {
+        letter-spacing: -0.2em;
+        content: '\00a0';
+      }
+      html body pre > code {
+        padding: 0;
+        margin: 0;
+        word-break: normal;
+        white-space: pre;
+        background: 0 0;
+        border: 0;
+      }
+      html body .highlight {
+        margin-bottom: 16px;
+      }
+      html body .highlight pre,
+      html body pre {
+        padding: 1em;
+        overflow: auto;
+        line-height: 1.45;
+        border: #d6d6d6;
+        border-radius: 3px;
+      }
+      html body .highlight pre {
+        margin-bottom: 0;
+        word-break: normal;
+      }
+      html body pre code,
+      html body pre tt {
+        display: inline;
+        max-width: initial;
+        padding: 0;
+        margin: 0;
+        overflow: initial;
+        line-height: inherit;
+        word-wrap: normal;
+        background-color: transparent;
+        border: 0;
+      }
+      html body pre code:after,
+      html body pre code:before,
+      html body pre tt:after,
+      html body pre tt:before {
+        content: normal;
+      }
+      html body blockquote,
+      html body dl,
+      html body ol,
+      html body p,
+      html body pre,
+      html body ul {
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+      html body kbd {
+        color: #000;
+        border: 1px solid #d6d6d6;
+        border-bottom: 2px solid #c7c7c7;
+        padding: 2px 4px;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+      }
+      @media print {
+        html body {
+          background-color: #fff;
+        }
+        html body h1,
+        html body h2,
+        html body h3,
+        html body h4,
+        html body h5,
+        html body h6 {
+          color: #000;
+          page-break-after: avoid;
+        }
+        html body blockquote {
+          color: #5c5c5c;
+        }
+        html body pre {
+          page-break-inside: avoid;
+        }
+        html body table {
+          display: table;
+        }
+        html body img {
+          display: block;
+          max-width: 100%;
+          max-height: 100%;
+        }
+        html body code,
+        html body pre {
+          word-wrap: break-word;
+          white-space: pre;
+        }
+      }
+      .markdown-preview {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .markdown-preview ul {
+        list-style: disc;
+      }
+      .markdown-preview ul ul {
+        list-style: circle;
+      }
+      .markdown-preview ul ul ul {
+        list-style: square;
+      }
+      .markdown-preview ol {
+        list-style: decimal;
+      }
+      .markdown-preview ol ol,
+      .markdown-preview ul ol {
+        list-style-type: lower-roman;
+      }
+      .markdown-preview ol ol ol,
+      .markdown-preview ol ul ol,
+      .markdown-preview ul ol ol,
+      .markdown-preview ul ul ol {
+        list-style-type: lower-alpha;
+      }
+      .markdown-preview .newpage,
+      .markdown-preview .pagebreak {
+        page-break-before: always;
+      }
+      .markdown-preview pre.line-numbers {
+        position: relative;
+        padding-left: 3.8em;
+        counter-reset: linenumber;
+      }
+      .markdown-preview pre.line-numbers > code {
+        position: relative;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows {
+        position: absolute;
+        pointer-events: none;
+        top: 1em;
+        font-size: 100%;
+        left: 0;
+        width: 3em;
+        letter-spacing: -1px;
+        border-right: 1px solid #999;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+      }
+      .markdown-preview pre.line-numbers .line-numbers-rows > span:before {
+        content: counter(linenumber);
+        color: #999;
+        display: block;
+        padding-right: 0.8em;
+        text-align: right;
+      }
+      .markdown-preview .mathjax-exps .MathJax_Display {
+        text-align: center !important;
+      }
+      .markdown-preview:not([data-for='preview']) .code-chunk .code-chunk-btn-group {
+        display: none;
+      }
+      .markdown-preview:not([data-for='preview']) .code-chunk .status {
+        display: none;
+      }
+      .markdown-preview:not([data-for='preview']) .code-chunk .output-div {
+        margin-bottom: 16px;
+      }
+      .markdown-preview .md-toc {
+        padding: 0;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link {
+        display: inline;
+        padding: 0.25rem 0;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,
+      .markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p {
+        display: inline;
+      }
+      .markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link {
+        font-weight: 800;
+      }
+      .scrollbar-style::-webkit-scrollbar {
+        width: 8px;
+      }
+      .scrollbar-style::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: transparent;
+      }
+      .scrollbar-style::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(150, 150, 150, 0.66);
+        border: 4px solid rgba(150, 150, 150, 0.66);
+        background-clip: content-box;
+      }
+      html body[for='html-export']:not([data-presentation-mode]) {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+      }
+      html body[for='html-export']:not([data-presentation-mode]) .markdown-preview {
+        position: relative;
+        top: 0;
+        min-height: 100vh;
+      }
+      @media screen and (min-width: 914px) {
+        html body[for='html-export']:not([data-presentation-mode]) .markdown-preview {
+          padding: 2em calc(50% - 457px + 2em);
+        }
+      }
+      @media screen and (max-width: 914px) {
+        html body[for='html-export']:not([data-presentation-mode]) .markdown-preview {
+          padding: 2em;
+        }
+      }
+      @media screen and (max-width: 450px) {
+        html body[for='html-export']:not([data-presentation-mode]) .markdown-preview {
+          font-size: 14px !important;
+          padding: 1em;
+        }
+      }
+      @media print {
+        html body[for='html-export']:not([data-presentation-mode]) #sidebar-toc-btn {
+          display: none;
+        }
+      }
+      html body[for='html-export']:not([data-presentation-mode]) #sidebar-toc-btn {
+        position: fixed;
+        bottom: 8px;
+        left: 8px;
+        font-size: 28px;
+        cursor: pointer;
+        color: inherit;
+        z-index: 99;
+        width: 32px;
+        text-align: center;
+        opacity: 0.4;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn {
+        opacity: 1;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        height: 100%;
+        padding: 32px 0 48px 0;
+        font-size: 14px;
+        box-shadow: 0 0 4px rgba(150, 150, 150, 0.33);
+        box-sizing: border-box;
+        overflow: auto;
+        background-color: inherit;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar {
+        width: 8px;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: transparent;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(150, 150, 150, 0.66);
+        border: 4px solid rgba(150, 150, 150, 0.66);
+        background-clip: content-box;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a {
+        text-decoration: none;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc {
+        padding: 0 16px;
+      }
+      html
+        body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link {
+        display: inline;
+        padding: 0.25rem 0;
+      }
+      html
+        body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link
+        div,
+      html
+        body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper
+        .md-toc-link
+        p {
+        display: inline;
+      }
+      html
+        body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc]
+        .md-sidebar-toc
+        .md-toc
+        .md-toc-link-wrapper.highlighted
+        .md-toc-link {
+        font-weight: 800;
+      }
+      html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview {
+        left: 300px;
+        width: calc(100% - 300px);
+        padding: 2em calc(50% - 457px - 300px / 2);
+        margin: 0;
+        box-sizing: border-box;
+      }
+      @media screen and (max-width: 1274px) {
+        html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview {
+          padding: 2em;
+        }
+      }
+      @media screen and (max-width: 450px) {
+        html body[for='html-export']:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview {
+          width: 100%;
+        }
+      }
+      html body[for='html-export']:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      html body[for='html-export']:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc {
+        display: none;
+      }
+      /* Please visit the URL below for more information: */
+      /*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+    </style>
+    <!-- The content below will be included at the end of the <head> element. -->
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        // your code here
+      });
+    </script>
+  </head>
+  <body for="html-export">
+    <div class="crossnote markdown-preview">
+      <h1 id="flexora-erp-api-規格彙整版">Flexora ERP API 規格（彙整版）</h1>
+      <blockquote>
+        <p>
+          更新日期：2025-10-30（Asia/Taipei）<br />
+          適用版本：JHipster v8.11.0 基礎（Spring Boot 3.4/3.5）<br />
+          本版重點：
+        </p>
+        <ul>
+          <li>定價模組（Pricing / Price List / Item Price Maintenance / Assignment Sync）</li>
+          <li>Phase 2：CRM（Customer / Contact / Address）</li>
+          <li><strong>唯一鍵規則</strong>：<code>deleted=false</code> 範圍 + <code>LOWER(code)</code> 全域唯一</li>
+          <li>補齊 <strong>:exists</strong>、<strong>:soft-delete</strong>、<strong>:restore</strong> API</li>
+        </ul>
+      </blockquote>
+      <hr />
+      <h2 id="0-全域規範">0) 全域規範</h2>
+      <h3 id="01-認證與標頭">0.1 認證與標頭</h3>
+      <ul>
+        <li><code>Authorization: Bearer &lt;JWT&gt;</code></li>
+        <li>追蹤：<code>X-Request-Id</code>（可選）</li>
+        <li>冪等：建議對 <strong>新增/批次上傳</strong> 支援 <code>Idempotency-Key</code>（伺服器需保存 key 與結果一段時間）</li>
+      </ul>
+      <h3 id="02-分頁排序">0.2 分頁/排序</h3>
+      <ul>
+        <li>參數：<code>page</code>、<code>size</code>、<code>sort=field,(asc|desc)</code>（JHipster 標準）</li>
+        <li>回應：<code>X-Total-Count</code> + <code>Link</code> header（第一頁/上一頁/下一頁/最後一頁）</li>
+      </ul>
+      <h3 id="03-軟刪還原語意">0.3 軟刪/還原語意</h3>
+      <ul>
+        <li>軟刪：設 <code>deleted=true</code> 與 <code>deletedAt/by</code>；<strong>不可被列表（預設條件）取回</strong></li>
+        <li>還原：設 <code>deleted=false</code>；<strong>若 code 與現存（deleted=false）衝突 → 400</strong></li>
+      </ul>
+      <h3 id="04-唯一鍵規則非常重要">0.4 唯一鍵規則（非常重要）</h3>
+      <ul>
+        <li>
+          <p>
+            <strong>規則</strong>：在 <code>deleted=false</code> 範圍，<strong><code>LOWER(code)</code> 全域唯一</strong>
+          </p>
+        </li>
+        <li>
+          <p><strong>適用</strong>：<code>Customer.customerNo</code>、<code>Contact.contactNo</code>、（可延伸至）Brand、UoM、Item…等</p>
+        </li>
+        <li>
+          <p><strong>錯誤格式</strong>（Problem+JSON）：</p>
+          <pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"https://www.jhipster.tech/problem/problem-with-message"</span><span class="token punctuation">,</span>
+  <span class="token property">"title"</span><span class="token operator">:</span> <span class="token string">"code.duplicate"</span><span class="token punctuation">,</span>
+  <span class="token property">"status"</span><span class="token operator">:</span> <span class="token number">400</span><span class="token punctuation">,</span>
+  <span class="token property">"entityName"</span><span class="token operator">:</span> <span class="token string">"customer"</span><span class="token punctuation">,</span>
+  <span class="token property">"errorKey"</span><span class="token operator">:</span> <span class="token string">"code.duplicate"</span><span class="token punctuation">,</span>
+  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"error.code.duplicate"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+        </li>
+      </ul>
+      <h3 id="05-常見錯誤碼">0.5 常見錯誤碼</h3>
+      <ul>
+        <li><code>400 BadRequest</code>：參數錯誤 / 唯一鍵衝突（<code>code.duplicate</code>）</li>
+        <li><code>404 NotFound</code>：目標不存在或已軟刪</li>
+        <li><code>409 Conflict</code>：批次/同步處理的版本衝突</li>
+        <li><code>422 UnprocessableEntity</code>：業務規則未滿足（例如：價表時效性、UoM 不可換算）</li>
+        <li><code>429 TooManyRequests</code>：節流</li>
+        <li><code>500</code>：非預期錯誤（帶追蹤 ID）</li>
+      </ul>
+      <hr />
+      <h2 id="1-定價與價表pricing">1) 定價與價表（Pricing）</h2>
+      <h3 id="11-api-一覽表含-controller">1.1 API 一覽表（含 Controller）</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>方法與路徑</th>
+            <th>中文名稱</th>
+            <th>功能用途</th>
+            <th>使用場景 / 呼叫對象</th>
+            <th>Controller 類別</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>POST <code>/api/pricing/preview</code></strong>
+            </td>
+            <td>價格試算（多行）</td>
+            <td>依輸入（客戶/群組/通路/幣別/日期/SKU/數量/UoM/稅別）執行定價引擎，回傳行單價、稅額、總額與折扣。</td>
+            <td>Quotation / SO / DN 建立或重算；管理端試算頁</td>
+            <td><code>PricingResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/pricing/price-lists/applicable</code></strong>
+            </td>
+            <td>查詢可適用價目表</td>
+            <td>依 Assignment 規則排序回傳（CUSTOMER→GROUP→CHANNEL→DEFAULT；priority 升冪）。</td>
+            <td>建立單據前帶出建議價目表</td>
+            <td><code>PricingResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/pricing/traces</code></strong>
+            </td>
+            <td>分頁查詢試算追蹤</td>
+            <td>依時間/關鍵字查詢 <code>PriceCalcTrace</code>。</td>
+            <td>稽核/除錯</td>
+            <td><code>PricingResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/pricing/traces/{traceNo}</code></strong>
+            </td>
+            <td>取得試算追蹤</td>
+            <td>查詢單一 trace（遮罩敏感欄位）。</td>
+            <td>稽核/除錯</td>
+            <td><code>PricingResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/pricing/reprice</code></strong>
+            </td>
+            <td>重算（Reprice）</td>
+            <td>以 Pricing 請求重算定價結果。</td>
+            <td>後台重算</td>
+            <td><code>PricingResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/price-lists</code></strong>
+            </td>
+            <td>查詢價目表</td>
+            <td>關鍵字/幣別/通路分頁查詢。</td>
+            <td>管理端列表</td>
+            <td><code>PriceListResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/price-lists</code></strong>
+            </td>
+            <td>新增價目表</td>
+            <td>建立價目表基本資訊（支援 <code>Idempotency-Key</code>）。</td>
+            <td>管理端</td>
+            <td><code>PriceListResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/price-lists/{id}</code></strong>
+            </td>
+            <td>更新價目表</td>
+            <td>編輯名稱、通路、期間、屬性。</td>
+            <td>管理端</td>
+            <td><code>PriceListResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/price-lists/{id}</code></strong>
+            </td>
+            <td>刪除價目表（軟刪）</td>
+            <td>標記 deleted。</td>
+            <td>管理端</td>
+            <td><code>PriceListResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/price-lists/{id}</code></strong>
+            </td>
+            <td>取得價目表</td>
+            <td>讀取單一價目表。</td>
+            <td>管理端</td>
+            <td><code>PriceListResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/price-lists/{id}/preview</code></strong>
+            </td>
+            <td>指定價目表預覽</td>
+            <td>鎖定價表取樣 SKU 做試算。</td>
+            <td>管理端驗證價表</td>
+            <td><code>ItemPriceMaintenanceResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/price-lists/{id}/items:bulk-upsert</code></strong>
+            </td>
+            <td>價表明細批次上傳</td>
+            <td>JSON/CSV 批次維護階梯價格（含 UoM/稅別）。</td>
+            <td>管理端大量調價</td>
+            <td><code>ItemPriceMaintenanceResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/price-lists/{id}/skus/{skuId}/item-prices/bulk-upsert</code></strong>
+            </td>
+            <td>單 SKU 批次上傳</td>
+            <td>維護單一 SKU 的多階梯價。</td>
+            <td>管理端</td>
+            <td><code>ItemPriceMaintenanceResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/price-lists/{id}/assignments:sync</code></strong>
+            </td>
+            <td>同步價目表指派</td>
+            <td>依前端排序（D&amp;D）重寫 priority=1..N；驗證所屬價表一致。</td>
+            <td>管理端</td>
+            <td><code>PriceListAssignmentSyncResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/brands</code></strong>
+            </td>
+            <td>查詢品牌</td>
+            <td>分頁/條件查詢 Brand。</td>
+            <td>管理端品牌總管</td>
+            <td><code>BrandResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/brands</code></strong>
+            </td>
+            <td>新增品牌</td>
+            <td>建立品牌主檔。</td>
+            <td>管理端</td>
+            <td><code>BrandResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/brands/{id}</code></strong>
+            </td>
+            <td>更新品牌</td>
+            <td>編輯品牌資訊。</td>
+            <td>管理端</td>
+            <td><code>BrandResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/brands/{id}</code></strong>
+            </td>
+            <td>刪除品牌</td>
+            <td>軟刪（建議加上被參照檢查）。</td>
+            <td>管理端</td>
+            <td><code>BrandResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/item-groups</code></strong>
+            </td>
+            <td>查詢產品群組</td>
+            <td>支援 by parentId、關鍵字。</td>
+            <td>類別管理</td>
+            <td><code>ItemGroupResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/item-groups</code></strong>
+            </td>
+            <td>新增產品群組</td>
+            <td>建立層級節點。</td>
+            <td>類別管理</td>
+            <td><code>ItemGroupResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/item-groups/{id}</code></strong>
+            </td>
+            <td>更新產品群組</td>
+            <td>調整名稱、父節點、排序。</td>
+            <td>類別管理</td>
+            <td><code>ItemGroupResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/item-groups/{id}</code></strong>
+            </td>
+            <td>刪除產品群組</td>
+            <td>軟刪（禁止刪除有子節點/被 Item 參照）。</td>
+            <td>類別管理</td>
+            <td><code>ItemGroupResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/items</code></strong>
+            </td>
+            <td>查詢產品</td>
+            <td>依品牌/群組/關鍵字。</td>
+            <td>產品主檔</td>
+            <td><code>ItemResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/items</code></strong>
+            </td>
+            <td>新增產品</td>
+            <td>建立 Item 主檔。</td>
+            <td>產品主檔</td>
+            <td><code>ItemResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/items/{id}</code></strong>
+            </td>
+            <td>更新產品</td>
+            <td>編輯產品資訊。</td>
+            <td>產品主檔</td>
+            <td><code>ItemResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/items/{id}</code></strong>
+            </td>
+            <td>刪除產品</td>
+            <td>軟刪（有 SKU 時禁止）。</td>
+            <td>產品主檔</td>
+            <td><code>ItemResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/uoms</code></strong>
+            </td>
+            <td>查詢單位</td>
+            <td>分頁/條件查詢 UoM。</td>
+            <td>基礎主檔</td>
+            <td><code>UomResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/uoms</code></strong>
+            </td>
+            <td>新增單位</td>
+            <td>建立 UoM。</td>
+            <td>基礎主檔</td>
+            <td><code>UomResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/uoms/{id}</code></strong>
+            </td>
+            <td>更新單位</td>
+            <td>編輯 UoM。</td>
+            <td>基礎主檔</td>
+            <td><code>UomResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/uoms/{id}</code></strong>
+            </td>
+            <td>刪除單位</td>
+            <td>軟刪（被使用時禁止）。</td>
+            <td>基礎主檔</td>
+            <td><code>UomResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>GET <code>/api/uom-conversions</code></strong>
+            </td>
+            <td>查詢換算</td>
+            <td>依 from/to/期間查詢換算率。</td>
+            <td>定價/庫存計量</td>
+            <td><code>UomConversionResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>POST <code>/api/uom-conversions</code></strong>
+            </td>
+            <td>新增換算</td>
+            <td>建立 <code>(from→to)</code> 換算率。</td>
+            <td>定價/庫存計量</td>
+            <td><code>UomConversionResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>PUT <code>/api/uom-conversions/{id}</code></strong>
+            </td>
+            <td>更新換算</td>
+            <td>編輯換算與有效期。</td>
+            <td>定價/庫存計量</td>
+            <td><code>UomConversionResource</code></td>
+          </tr>
+          <tr>
+            <td>
+              <strong>DELETE <code>/api/uom-conversions/{id}</code></strong>
+            </td>
+            <td>刪除換算</td>
+            <td>軟刪（避免中斷已用路徑）。</td>
+            <td>定價/庫存計量</td>
+            <td><code>UomConversionResource</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <h4 id="12-價表批次上傳csv格式">1.2 價表批次上傳（CSV）格式</h4>
+      <pre
+        data-role="codeBlock"
+        data-info="csv"
+        class="language-csv csv"
+      ><code><span class="token value">skuId;uomCode;minQty;unitPrice;taxCode</span>
+<span class="token value">1001;;0;100.000000;TWN_VAT_5</span>
+<span class="token value">1001;;10;95.000000;TWN_VAT_5</span>
+</code></pre>
+      <ul>
+        <li><code>uomCode</code> 可留空代表 SKU 基本單位</li>
+        <li>金額建議 <code>DECIMAL(19,6)</code>；最終呈現可四捨五入 2 位</li>
+        <li>稅別依據系統 <code>tax_code</code> 參照</li>
+      </ul>
+      <h4 id="13-幣別與價型">1.3 幣別與價型</h4>
+      <ul>
+        <li><code>price_list.currency_code</code> 必須與試算請求相容</li>
+        <li><code>price_type</code> 控制儲存價是否含稅（引擎計算時要對準）</li>
+      </ul>
+      <hr />
+      <h2 id="2-phase-2crmcustomer--contact--address">2) Phase 2：CRM（Customer / Contact / Address）</h2>
+      <h3 id="21-address">2.1 Address</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>路徑</th>
+            <th>中文名稱</th>
+            <th>用途</th>
+            <th>Controller</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/addresses</code></td>
+            <td>新增地址</td>
+            <td>建立 Address 主檔</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/addresses</code></td>
+            <td>查詢地址</td>
+            <td>分頁/條件查詢</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/addresses/{id}</code></td>
+            <td>讀取地址</td>
+            <td>讀單筆</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/addresses/{id}</code></td>
+            <td>局部更新</td>
+            <td>Merge-Patch</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+          <tr>
+            <td>PUT</td>
+            <td><code>/api/addresses/{id}</code></td>
+            <td>覆寫更新</td>
+            <td>全量更新</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+          <tr>
+            <td>DELETE</td>
+            <td><code>/api/addresses/{id}</code></td>
+            <td><strong>硬刪除</strong></td>
+            <td>物理刪除（謹慎）</td>
+            <td><code>AddressResource</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <blockquote>
+        <p>若需軟刪/還原，可追加：<code>POST /api/addresses/{id}:soft-delete</code>、<code>POST /api/addresses/{id}:restore</code></p>
+      </blockquote>
+      <hr />
+      <h3 id="22-customer">2.2 Customer</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>路徑</th>
+            <th>中文名稱</th>
+            <th>用途</th>
+            <th>備註</th>
+            <th>Controller</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/customers</code></td>
+            <td>新增客戶</td>
+            <td>建立 Customer</td>
+            <td>儲存前檢查 <code>LOWER(customerNo)</code> 唯一（<code>deleted=false</code>）</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/customers</code></td>
+            <td>查詢客戶</td>
+            <td>分頁/條件查詢</td>
+            <td>依 Criteria</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/customers/{id}</code></td>
+            <td>讀取客戶</td>
+            <td>讀單筆</td>
+            <td>—</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/customers/{id}</code></td>
+            <td>局部更新</td>
+            <td>Merge-Patch</td>
+            <td>儲存前檢查唯一</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td>PUT</td>
+            <td><code>/api/customers/{id}</code></td>
+            <td>覆寫更新</td>
+            <td>全量更新</td>
+            <td>儲存前檢查唯一</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td>DELETE</td>
+            <td><code>/api/customers/{id}</code></td>
+            <td><strong>硬刪除</strong></td>
+            <td>物理刪除</td>
+            <td>謹慎使用</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>POST</strong></td>
+            <td>
+              <strong><code>/api/customers/{id}:soft-delete</code></strong>
+            </td>
+            <td><strong>軟刪除</strong></td>
+            <td>設 <code>deleted=true</code>、填 <code>deletedAt/by</code></td>
+            <td>新增</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>POST</strong></td>
+            <td>
+              <strong><code>/api/customers/{id}:restore</code></strong>
+            </td>
+            <td><strong>還原</strong></td>
+            <td>設 <code>deleted=false</code>（<strong>遇碼重複→400</strong>）</td>
+            <td>新增</td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>GET</strong></td>
+            <td>
+              <strong><code>/api/customers:exists</code></strong>
+            </td>
+            <td><strong>代碼唯一檢查</strong></td>
+            <td><code>?customerNo=...</code> 或 <code>?customerNo=...&amp;excludeId=123</code> 回 <code>{ "exists": true/false }</code></td>
+            <td>大小寫不分、只看 <code>deleted=false</code></td>
+            <td><code>CustomerResource</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>唯一規則（DB + 程式）</strong></p>
+      <ul>
+        <li><code>LOWER(customer_no)</code> 在 <code>deleted=false</code> 範圍內 <strong>全域唯一</strong></li>
+        <li>新增/更新/還原前若衝突 → <code>400 BadRequestAlertException("code.duplicate")</code></li>
+      </ul>
+      <p><strong>範例：代碼唯一檢查（Customer）</strong></p>
+      <pre
+        data-role="codeBlock"
+        data-info="bash"
+        class="language-bash bash"
+      ><code><span class="token function">curl</span> <span class="token parameter variable">-H</span> <span class="token string">"Authorization: Bearer <span class="token variable">$TOKEN</span>"</span> <span class="token punctuation">\</span>
+  <span class="token string">"<span class="token variable">$BASE</span>/api/customers:exists?customerNo=C-001"</span>
+<span class="token comment"># -&gt; { "exists": true }</span>
+</code></pre>
+      <p>排除自身（編輯時）：</p>
+      <pre
+        data-role="codeBlock"
+        data-info="bash"
+        class="language-bash bash"
+      ><code><span class="token function">curl</span> <span class="token parameter variable">-H</span> <span class="token string">"Authorization: Bearer <span class="token variable">$TOKEN</span>"</span> <span class="token punctuation">\</span>
+  <span class="token string">"<span class="token variable">$BASE</span>/api/customers:exists?customerNo=C-001&amp;excludeId=123"</span>
+<span class="token comment"># -&gt; { "exists": false }</span>
+</code></pre>
+      <hr />
+      <h3 id="23-contact">2.3 Contact</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>路徑</th>
+            <th>中文名稱</th>
+            <th>用途</th>
+            <th>備註</th>
+            <th>Controller</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/contacts</code></td>
+            <td>新增聯絡人</td>
+            <td>建立 Contact</td>
+            <td>儲存前檢查 <code>LOWER(contactNo)</code> 唯一（<code>deleted=false</code>）</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/contacts</code></td>
+            <td>查詢聯絡人</td>
+            <td>分頁/條件查詢</td>
+            <td>依 Criteria</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/contacts/{id}</code></td>
+            <td>讀取聯絡人</td>
+            <td>讀單筆</td>
+            <td>—</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td>PATCH</td>
+            <td><code>/api/contacts/{id}</code></td>
+            <td>局部更新</td>
+            <td>Merge-Patch</td>
+            <td>儲存前檢查唯一</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td>PUT</td>
+            <td><code>/api/contacts/{id}</code></td>
+            <td>覆寫更新</td>
+            <td>全量更新</td>
+            <td>儲存前檢查唯一</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td>DELETE</td>
+            <td><code>/api/contacts/{id}</code></td>
+            <td><strong>硬刪除</strong></td>
+            <td>物理刪除</td>
+            <td>謹慎使用</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>POST</strong></td>
+            <td>
+              <strong><code>/api/contacts/{id}:soft-delete</code></strong>
+            </td>
+            <td><strong>軟刪除</strong></td>
+            <td>設 <code>deleted=true</code>、填 <code>deletedAt/by</code></td>
+            <td>新增</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>POST</strong></td>
+            <td>
+              <strong><code>/api/contacts/{id}:restore</code></strong>
+            </td>
+            <td><strong>還原</strong></td>
+            <td>設 <code>deleted=false</code>（<strong>遇碼重複→400</strong>）</td>
+            <td>新增</td>
+            <td><code>ContactResource</code></td>
+          </tr>
+          <tr>
+            <td><strong>GET</strong></td>
+            <td>
+              <strong><code>/api/contacts:exists</code></strong>
+            </td>
+            <td><strong>代碼唯一檢查</strong></td>
+            <td><code>?contactNo=...</code> 或 <code>?contactNo=...&amp;excludeId=123</code> 回 <code>{ "exists": true/false }</code></td>
+            <td>大小寫不分、只看 <code>deleted=false</code></td>
+            <td><code>ContactResource</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>唯一規則（DB + 程式）</strong></p>
+      <ul>
+        <li><code>LOWER(contact_no)</code> 在 <code>deleted=false</code> 範圍內 <strong>全域唯一</strong></li>
+        <li>若 <code>contactNo</code> 允許為空，則僅在 <strong>非空</strong> 時檢查唯一</li>
+      </ul>
+      <p><strong>範例：代碼唯一檢查（Contact）</strong></p>
+      <pre
+        data-role="codeBlock"
+        data-info="bash"
+        class="language-bash bash"
+      ><code><span class="token function">curl</span> <span class="token parameter variable">-H</span> <span class="token string">"Authorization: Bearer <span class="token variable">$TOKEN</span>"</span> <span class="token punctuation">\</span>
+  <span class="token string">"<span class="token variable">$BASE</span>/api/contacts:exists?contactNo=CT-0008"</span>
+<span class="token comment"># -&gt; { "exists": false }</span>
+</code></pre>
+      <hr />
+      <h3 id="24-軟刪還原錯誤情境與建議-ui">2.4 軟刪/還原錯誤情境與建議 UI</h3>
+      <ul>
+        <li>
+          <p>
+            <strong>還原衝突</strong>：<code>POST /api/customers/{id}:restore</code>（或 contacts）<br />
+            若另一筆 <code>deleted=false</code> 的資料已使用相同 code（大小寫不分），回 <code>400 code.duplicate</code>（見 0.4 範例
+            JSON）。
+          </p>
+        </li>
+        <li>
+          <p><strong>建議前端處理</strong>：</p>
+          <ul>
+            <li>攔截 <code>code.duplicate</code> → 提示「代碼已被使用，請更換代碼後再試」</li>
+            <li>:exists 先行檢查，避免提交後才失敗</li>
+            <li>編輯模式請帶 <code>excludeId</code></li>
+          </ul>
+        </li>
+      </ul>
+      <hr />
+      <h2 id="3-參考請求格式">3) 參考請求格式</h2>
+      <h3 id="31-價格試算多行">3.1 價格試算（多行）</h3>
+      <pre data-role="codeBlock" data-info="http" class="language-http http"><code>POST /api/pricing/preview
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/json</span></span>
+<span class="token header"><span class="token header-name keyword">Authorization</span><span class="token punctuation">:</span> <span class="token header-value">Bearer &lt;JWT&gt;</span></span>
+<span class="token application-json">
+<span class="token punctuation">{</span>
+  <span class="token string-property property">"currency"</span><span class="token operator">:</span> <span class="token string">"TWD"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"priceDate"</span><span class="token operator">:</span> <span class="token string">"2025-10-30"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"customerNo"</span><span class="token operator">:</span> <span class="token string">"C-001"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"channelCode"</span><span class="token operator">:</span> <span class="token string">"B2B"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"lines"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token string-property property">"skuId"</span><span class="token operator">:</span> <span class="token number">1001</span><span class="token punctuation">,</span> <span class="token string-property property">"uomCode"</span><span class="token operator">:</span> <span class="token keyword null nil keyword-null">null</span><span class="token punctuation">,</span> <span class="token string-property property">"qty"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token string-property property">"taxCode"</span><span class="token operator">:</span> <span class="token string">"TWN_VAT_5"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token string-property property">"skuId"</span><span class="token operator">:</span> <span class="token number">2009</span><span class="token punctuation">,</span> <span class="token string-property property">"uomCode"</span><span class="token operator">:</span> <span class="token string">"BOX"</span><span class="token punctuation">,</span> <span class="token string-property property">"qty"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token string-property property">"taxCode"</span><span class="token operator">:</span> <span class="token string">"TWN_VAT_5"</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</span></code></pre>
+      <p>回應（摘要）：</p>
+      <pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"traceNo"</span><span class="token operator">:</span> <span class="token string">"PRC-20251030-000123"</span><span class="token punctuation">,</span>
+  <span class="token property">"currency"</span><span class="token operator">:</span> <span class="token string">"TWD"</span><span class="token punctuation">,</span>
+  <span class="token property">"lines"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token property">"skuId"</span><span class="token operator">:</span> <span class="token number">1001</span><span class="token punctuation">,</span> <span class="token property">"uomCode"</span><span class="token operator">:</span> <span class="token string">"EA"</span><span class="token punctuation">,</span> <span class="token property">"qty"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token property">"unitPrice"</span><span class="token operator">:</span> <span class="token number">95.0</span><span class="token punctuation">,</span> <span class="token property">"net"</span><span class="token operator">:</span> <span class="token number">1140.0</span><span class="token punctuation">,</span> <span class="token property">"tax"</span><span class="token operator">:</span> <span class="token number">57.0</span><span class="token punctuation">,</span> <span class="token property">"gross"</span><span class="token operator">:</span> <span class="token number">1197.0</span><span class="token punctuation">,</span> <span class="token property">"appliedPriceListId"</span><span class="token operator">:</span> <span class="token number">17</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token property">"skuId"</span><span class="token operator">:</span> <span class="token number">2009</span><span class="token punctuation">,</span> <span class="token property">"uomCode"</span><span class="token operator">:</span> <span class="token string">"BOX"</span><span class="token punctuation">,</span> <span class="token property">"qty"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token property">"unitPrice"</span><span class="token operator">:</span> <span class="token number">320.0</span><span class="token punctuation">,</span> <span class="token property">"net"</span><span class="token operator">:</span> <span class="token number">960.0</span><span class="token punctuation">,</span> <span class="token property">"tax"</span><span class="token operator">:</span> <span class="token number">48.0</span><span class="token punctuation">,</span> <span class="token property">"gross"</span><span class="token operator">:</span> <span class="token number">1008.0</span><span class="token punctuation">,</span> <span class="token property">"appliedPriceListId"</span><span class="token operator">:</span> <span class="token number">17</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+      <h3 id="32-價表明細批次上傳csv">3.2 價表明細批次上傳（CSV）</h3>
+      <pre data-role="codeBlock" data-info="http" class="language-http http"><code>POST /api/price-lists/17/items:bulk-upsert
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">text/csv</span></span>
+<span class="token header"><span class="token header-name keyword">Idempotency-Key</span><span class="token punctuation">:</span> <span class="token header-value">20251030-PL17</span></span>
+
+skuId;uomCode;minQty;unitPrice;taxCode
+1001;;0;100.000000;TWN_VAT_5
+1001;;10;95.000000;TWN_VAT_5
+</code></pre>
+      <hr />
+      <h2 id="4-版本與變更紀錄">4) 版本與變更紀錄</h2>
+      <ul>
+        <li>
+          <p><strong>2025-10-30</strong></p>
+          <ul>
+            <li>新增 <code>customers:exists</code> / <code>contacts:exists</code> 說明與範例</li>
+            <li>明確化 <strong>唯一鍵規則</strong> 與還原衝突錯誤格式</li>
+            <li>彙整 Pricing + CRM API 成單一文件，補上批次上傳 CSV 規範</li>
+            <li>增補冪等建議與錯誤碼表</li>
+          </ul>
+        </li>
+      </ul>
+      <hr />
+    </div>
+  </body>
+</html>

@@ -27,3 +27,14 @@ Entries track each migration step, including source files in `flexora-react/docs
 - Added Drawer wireframe (`docs/ui/wireframes/quotation-drawer-wireframe.md`) per user preference for full-width list + slide-out detail, and updated plan/checklist accordingly.
 - Added pipeline HTML prototype at `docs/ui/wireframes/quotation-pipeline-prototype.html` for drag-and-drop columns + drawer detail interactions.
 - Added `docs/migration/flexora-react/ui/react-ui-checklist.md` with updated items (List/Pipeline toggle, Drawer detail, workflow guards, pricing/attachments).
+- Implemented actual UI at `flexora-react-ui/src/views/sales/QuotesWorkspace.tsx` with List/Pipeline/Drawer layout and updated `/sales/quotes` route + UI spec reference.
+- Added `docs/ecme-template-document/README.md` summarizing Ecme template guides, and updated `docs/AGENTS.md` to require reading此目錄 before UI development.
+
+## 2025-11-20
+- 串接正式登入：`flexora-react-ui` 以 `/api/authenticate` 為唯一入口，新增 `rememberMe` 選項並依狀態選擇將 JWT 存於 `sessionStorage`（預設）或 `localStorage`，同時統一 axios interceptor 的 Token 讀取邏輯。
+- 登入後會呼叫 `/api/account` 同步帳號資訊，並透過 `WebsocketTrackerService` 連線後端 `/websocket/tracker` 回報使用者活動；登出時會清除 Token 與 websocket 連線。
+- `docs/specs/phase0-system-foundation/security-and-auth.md` 已補充登入欄位、Token 儲存策略及 websocket 追蹤流程，確保文件與程式碼一致。
+
+## 2025-11-21
+- 新增 Vite 開發環境設定檔 `.env.development`，透過 `VITE_BACKEND_URL` 管控 API 與 Websocket 連線的後端位址，避免寫死 localhost。
+- `WebsocketTrackerService` 依據 `VITE_BACKEND_URL` 或 `window.location.origin` 建構 tracker URL，確保 dev/prod 皆能連到對應的 `/websocket/tracker`。

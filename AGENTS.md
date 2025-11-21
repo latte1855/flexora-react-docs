@@ -143,6 +143,7 @@ Agent 在前端編輯時：
 2. 新增 Page / Component → 加入繁體中文註解
 3. 新 API 呼叫 → 檢查後端是否已有端點
 4. 避免引入不必要的 UI 套件（若需引入，需在文件註明原因）
+5. **開始 UI 開發前，請先閱讀 `docs/ecme-template-document/` 下所有 Ecme Template 說明（`README.md` 提供索引）**，確保對版型、表單、表格、樣式與共用元件有完整理解。
 
 ---
 
@@ -241,4 +242,3 @@ ERP 後端（flexora-react）中仍保留 JHipster 自動產生的內建 React U
 並維持前後端與文件之間的一致性。
 
 若遇不確定情況，請保守處理並提示使用者。
-

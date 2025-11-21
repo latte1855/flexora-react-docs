@@ -48,7 +48,12 @@
 
 ## 6. Designer/Developer Checklist（Reminder）
 
-1. List/Pipeline filter mapping, columns, actions; guard toast mapping for `quotation.*` error key.  
-2. Detail Pane layout & associations; ensure everything has data source and error handling.  
-3. Workflow Drawer integration; fetch guard info per revision, map actions to backend.  
+1. List/Pipeline filter mapping, columns, actions; guard toast mapping for `quotation.*` error key.
+2. Detail Pane layout & associations; ensure everything has data source and error handling.
+3. Workflow Drawer integration; fetch guard info per revision, map actions to backend.
 4. Attachments + Documents list to align with Phase 0 Document spec.
+
+## 7. React 實作參考
+
+- 主要畫面實作於 `flexora-react-ui/src/views/sales/QuotesWorkspace.tsx`，負責 List/Pipeline/Drawer layout 與篩選邏輯。
+- 路由設定：`/sales/quotes` 在 `flexora-react-ui/src/configs/routes/sales.routes.ts` 指向上述組件。

@@ -40,9 +40,12 @@ Flexora ERP 採用：
 ```json
 {
   "username": "admin",
-  "password": "admin"
+  "password": "admin",
+  "rememberMe": true
 }
 ```
+
+`rememberMe = true` 時後端會改用 `token-validity-in-seconds-for-remember-me` 的設定延長 JWT 壽命；`false` 則採一般有效時間。
 
 * Response 格式（示意）：
 
@@ -52,7 +55,7 @@ Flexora ERP 採用：
 }
 ```
 
-> ⚠ 實際欄位名稱依 JHipster 設定，通常為 `id_token` 或 `access_token`。
+> ⚠ 實際欄位名稱依 JHipster 設定，通常為 `id_token`（Flexora 目前採用）或 `access_token`。
 
 ### 2.2 JWT Tokens
 
@@ -67,6 +70,15 @@ Flexora ERP 採用：
 
 * Phase 0 可先使用 JHipster 預設設定。
 * 若未來支援 Refresh Token 或短/長效 Token，需更新本文件並建立 ADR。
+
+### 2.4 前端串接（flexora-react-ui）
+
+1. 正式 UI 的登入頁提供 `username`、`password` 與「記住我」（`rememberMe`）欄位。  
+   - 勾選記住我 → JWT 寫入 `localStorage`，頁面重新整理仍保留。  
+   - 未勾選 → JWT 僅存在 `sessionStorage`，關閉分頁即移除。
+2. 成功取得 JWT 後，前端立即呼叫 `GET /api/account` 以 `AdminUserDTO` 同步 `authority`、姓名、Email 與頭像，作為 Route / Menu 權限的唯一資料來源。
+3. axios request interceptor 會依序從 `localStorage`、`sessionStorage`、Cookie 取得 Token，並自動加上 `Authorization: Bearer <token>`。
+4. UI 會啟動 Websocket Tracker（見 6.4）以回報活動訊息，方便後端監控同時在線的帳號。
 
 ---
 
@@ -165,10 +177,11 @@ public ResponseEntity<QuotationDTO> createQuotation(...) {
 
 ### 6.1 Token 儲存位置
 
-* Phase 0 可以採用：
+* 目前策略：
 
-  * `localStorage` 或 `sessionStorage` 或 in-memory（依實作）
-* 未來若有更嚴謹需求（避免 XSS），可考慮：
+  * 預設存於 `sessionStorage`（瀏覽器分頁關閉即登出）。
+  * 勾選 rememberMe 時改寫入 `localStorage`，同時在 `localStorage` 標記目前的儲存策略，後續登入沿用。
+* 若未來有更嚴謹需求（避免 XSS），可考慮：
 
   * HttpOnly Cookie + CSRF 策略
 
@@ -191,6 +204,14 @@ if (!user?.authorities.includes('ROLE_ADMIN')) {
 
 * 前端權限控制主要是 UX 層級的，避免無權限使用者看到不該看到的按鈕。
 * 後端才是最終的安全閘，必須在所有關鍵操作端點驗證權限。
+
+### 6.4 Websocket 活動追蹤
+
+* `flexora-react-ui/src/services/WebsocketTrackerService.ts` 會在下列情境連線至 `/websocket/tracker`：
+  1. 成功登入並取得 JWT。
+  2. 頁面重新整理後偵測到 JWT 與登入狀態仍有效。
+* Token 會附加在 query string（`?access_token=...`），後端即可識別使用者並將其加入 tracker。
+* 登出或 JWT 無效時會自動斷線與清理資源，確保後端不保留幽靈連線。
 
 ---
 

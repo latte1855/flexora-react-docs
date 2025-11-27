@@ -31,6 +31,12 @@
    - 行項表格會即時呼叫 `GET /api/item-skus`（同時支援 `skuNo.contains` 與 `skuName.contains`）載入可銷售 SKU，並自動帶入預設 UoM / 稅別。選項顯示 SKU 編碼、名稱與 UoM，確保 Sales 能在 Drawer 內完成 SKU 選擇。
    - Drawer 的單價欄位目前僅供覆寫需求預留：輸入的值會被序列化為 `properties.extAttrs.manualUnitPrices`（陣列：`[{ lineIndex, skuId, unitPrice }]`），後端仍依 Pricing 結果計算，待 Phase 5.1 正式支援 `unitPriceOverride` 後再改用真正欄位。
    - 行項視圖下方提供 Summary 卡片，隨輸入即時計算總筆數 / 已就緒行數 / 合計數量 / 手動單價筆數，方便銷售快速自檢；每列也會以 Badge 呈現「待選 SKU / 待填數量 / 手動單價 / 就緒」狀態，搭配紅框提示，讓使用者在第二步就能看懂哪一行尚未完成。
+   - **2025-11-21 更新**：快速建立 Drawer 的 ExtAttr 區塊改為呼叫 `/api/quotation-revision-ext-attr-defs` 取得尚未刪除的欄位定義，依 `dataType/requiredAttr` 動態渲染（文字 / 數字 / 日期 / 布林下拉），並於送出前檢查必填欄位；payload 統一序列化為 `properties.extAttrs`，確保資料庫調整後前端可立即繼承。
+   - **2025-11-21 新增**：Detail Drawer 增加「建立新版本」按鈕，Quick Create Drawer 會帶入 Thread/Revision/Line Items/ExtAttr 既有資料並呼叫 `POST /api/quotations/{threadId}/revisions` 產生下一版。
+   - **2025-11-21 API**：新增 `PUT /api/quotations/{threadId}/revisions/{revisionId}`，重新以 Pricing 結果覆寫指定 revision（僅草稿），後續 Drawer Edit 流程可直接串此端點。
+   - **2025-11-22 UI**：Detail Drawer 於 DRAFT 狀態顯示「編輯草稿」鈕，Quick Create Drawer 加入 Edit 模式並串接新 API，可直接覆寫既有修訂版。
+   - **2025-11-22 新增**：Quick Create Drawer 明細新增 UoM、稅別與「行折扣型態 / 值」欄位，透過 `/api/uoms`、`/api/tax-codes` 取得選項，並在 `QuotationPreviewRequest.items` 帶入 `uomId`、`taxCode`、`discountType`、`discountValue`。後端 `QuotationPreviewItemDTO` / `QuotationService` 亦同步擴充，預覽與 Revision 落地可保留行折扣資訊並套用於 `QuotationCalculationService`。
+   - **2025-11-22 Attachments/Related**：Detail Drawer 的 Attachments Tab 已串接 `/api/document-links`、`/api/documents/upload` 與 `POST /api/quotations/{threadId}/documents`，可上傳/下載並區分 Thread 與 Revision 附件；Related Tab 串接 `/api/quotations/{threadId}/links` 顯示 Sales Order 連結摘要。
    - **Pipeline 性能**：每個欄位預設只渲染 30 筆卡片，使用者可按「載入更多」逐段展開（狀態變更或重新整理時會重置），避免一次性載入上百筆造成 DOM lag。
    - Convert Drawer 會顯示選取行的稅額摘要與幣別資訊，並提供匯率提示，讓轉單前能快速檢視稅負分布。
    - 在支援 `IntersectionObserver` 的瀏覽器會自動偵測欄位捲動並載入下一批（Load More 按鈕仍保留為後援），減少手動點擊。

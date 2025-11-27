@@ -12,7 +12,7 @@
 | ----- | ----------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------------- |
 | UI-01 | **Quotation Hub – List View**       | DataTable + filter chips（Owner、狀態、日期區間），批次動作 Toolbar。     | 需沿用 JHipster List；新增 pipeline 切換按鈕。      |
 | UI-02 | **Quotation Hub – Pipeline View**   | Kanban 欄（Draft/Sent/...），卡片顯示客戶/金額/有效日，支援拖拉觸發事件。 | 與 Workflow API 整合；顏色依 Materia mapping。      |
-| UI-03 | **Detail Page + Revision Timeline** | Header summary + Tabs（Overview/Line Items/Pricing/Workflow/Attachments） | 右側 Sticky Timeline + SalesOrder link 列表。       |
+| UI-03 | **Detail Page + Revision Timeline** | Header summary + Tabs（Overview/Line Items/Pricing/Workflow/Attachments） | 右側 Sticky Timeline + SalesOrder link 列表；畫面右下需有可收合/可縮放的 Drawer List。       |
 | UI-04 | **Quotation Drawer（Create/Edit）** | Drawer Wizard：基本資料 → 行項 → 客製欄位/附件；支援 auto numbering。     | 行項表格 + ExtAttrPanel + AttachmentGrid 共用元件。 |
 | UI-05 | **Workflow Drawer / Quick Action**  | 事件表單（channel/reason/note），送出、批准、客戶接受、取消等。           | 守衛與 Workflow Service 對齊；Pipeline 拖拉共用。   |
 | UI-06 | **Convert to Sales Order Drawer**   | 勾選行項 + 餘量提示 + Sales Order 起始狀態，顯示結果 SO 清單。            | SOT-7 API；需顯示自動 SUBMIT/CONFIRM 結果。         |
@@ -29,9 +29,11 @@
 2. **Pipeline 拖拉**：拖曳卡片時呼叫 `POST /api/quotations/{id}/events/{eventCode}`；若失敗，UI 回滾並顯示錯誤（BadRequestAlert message）。
    - **Quick Create Drawer Flow**：使用者在 Drawer 填寫基本資料 → 呼叫 `POST /api/quotations/preview` 做行項/金額檢核 → 同一份 payload 再呼叫 `POST /api/quotations` 建立草稿。Drawer 需帶入行項、付款條件、Billing/Shipping Address Snapshot，並允許後續 Phase 5.1 擴充 ExtAttr/附件。
    - 行項表格會即時呼叫 `GET /api/item-skus`（同時支援 `skuNo.contains` 與 `skuName.contains`）載入可銷售 SKU，並自動帶入預設 UoM / 稅別。選項顯示 SKU 編碼、名稱與 UoM，確保 Sales 能在 Drawer 內完成 SKU 選擇。
-   - Drawer 的單價欄位目前僅供覆寫需求預留：輸入的值會被序列化為 `properties.extAttrs.manualUnitPrices`（陣列：`[{ lineIndex, skuId, unitPrice }]`），後端仍依 Pricing 結果計算，待 Phase 5.1 正式支援 `unitPriceOverride` 後再改用真正欄位。
-   - 行項視圖下方提供 Summary 卡片，隨輸入即時計算總筆數 / 已就緒行數 / 合計數量 / 手動單價筆數，方便銷售快速自檢；每列也會以 Badge 呈現「待選 SKU / 待填數量 / 手動單價 / 就緒」狀態，搭配紅框提示，讓使用者在第二步就能看懂哪一行尚未完成。
-   - **Pipeline 性能**：每個欄位預設只渲染 30 筆卡片，使用者可按「載入更多」逐段展開（狀態變更或重新整理時會重置），避免一次性載入上百筆造成 DOM lag。
+- Drawer 的單價欄位目前僅供覆寫需求預留：輸入的值會被序列化為 `properties.extAttrs.manualUnitPrices`（陣列：`[{ lineIndex, skuId, unitPrice }]`），後端仍依 Pricing 結果計算，待 Phase 5.1 正式支援 `unitPriceOverride` 後再改用真正欄位。
+- 行項視圖下方提供 Summary 卡片，隨輸入即時計算總筆數 / 已就緒行數 / 合計數量 / 手動單價筆數，方便銷售快速自檢；每列也會以 Badge 呈現「待選 SKU / 待填數量 / 手動單價 / 就緒」狀態，搭配紅框提示，讓使用者在第二步就能看懂哪一行尚未完成。
+- Detail 頁的右下角提供一個可縮放的 Drawer 式清單（預設顯示關聯紀錄：Sales Order、Delivery、Thread 活動），可拖曳調整高度或最小化，行為沿用 Ecme Drawer 元件並加上 Resize handle；此清單需保持在 detail 頁任何 Tab 均可快速展開。
+- List View 分頁需支援「跳到指定頁」輸入框，方便使用者大量資料時快速定位；實作時以 TanStack Table 的 `pageIndex/pageCount` 為主，將輸入轉換為 query 參數即可。
+- **Pipeline 性能**：每個欄位預設只渲染 30 筆卡片，使用者可按「載入更多」逐段展開（狀態變更或重新整理時會重置），避免一次性載入上百筆造成 DOM lag。
    - Convert Drawer 會顯示選取行的稅額摘要與幣別資訊，並提供匯率提示，讓轉單前能快速檢視稅負分布。
    - 在支援 `IntersectionObserver` 的瀏覽器會自動偵測欄位捲動並載入下一批（Load More 按鈕仍保留為後援），減少手動點擊。
 3. **Drawer 建立/更新**：使用 `POST /api/quotations`/`PUT /api/quotations/{id}`；行項透過 nested DTO 傳遞；`properties.extAttrs` 由 ExtAttrPanel 統一管理。
@@ -41,11 +43,55 @@
 5. **轉 Sales Order**：呼叫 `POST /api/quotations/{threadId}/revisions/{revId}:to-sales-order`，回傳 `SalesOrderDTO` + Link 資訊；完成後 Hub 需要重新整理 Pipeline 卡片狀態。
 6. **共用元件**：ExtAttrPanel 讀取 `ExtAttrDef` 列表、維護 JSON；AttachmentGrid 透過 Document Service 取得 `documentId` 後再連結；AddressCard 使用 AddressSnapshot VO。
 7. **ExtAttr 評估**：Drawer 於提交前會呼叫 `/api/quotation-revision-ext-attr-defs` 取得 `ExtAttr` 定義（code/dataType/required），前端將填寫結果序列化為 `properties.extAttrs` JSON，並透過 `ExtAttrPanel` 共用元件管理輸入；詳細頁同樣使用 `ExtAttrPanel` 呈現，不再重複排版。
-8. **單價覆寫（TODO）**：目前 Drawer 的單價欄位僅暫存於 `properties.extAttrs.manualUnitPrices`。待 Phase 5.1 擴充 `QuotationPreviewRequestDTO` / `QuotationPreviewItemDTO` 及 `quotation_item` 欄位後，再改為正式的 `unitPriceOverride`/`pricingMode` 欄位並於 preview/create 時帶入。
-9. **Hub 篩選 / 分頁 / URL 同步**：`GET /api/quotation-threads` 已支援 `currentRevisionStatusCode.*`、`currentRevisionValidUntil.*` 以及 `ownerScope` 參數；「全部」固定傳 `ownerScope=MINE`（取可見 Owner 清單）、「我的報價」傳 `ownerScope=SELF`（強制 owner=本人）。List View 以 server-side 分頁載入並將條件同步到 URL query（回上一頁時仍保留）；Pipeline 模式沿用相同條件一次抓 500 筆資料並依狀態分欄。Detail 頁面與 Hub 之間透過 `sessionStorage.quotationHubRefreshToken` 交換刷新訊號，確保在詳情頁觸發 Workflow/轉單後回到 Hub 時會自動重新查詢。
+8. **QuoThread vs QuoRevision 呈現**：Hub（List/Pipeline）以 Thread 為單位呈現 `currentRevision` 資訊（顯示 revision code / 更新時間），並在卡片上加上「最新 Revision」徽章。詳細頁/Drawer 內則提供 Revision Timeline（列出所有 Revision，含狀態/建立時間/編號），可切換版本後刷新 Tabs（Overview/Line/Pricing/Workflow/Attachments/Related）。預設載入最新 revision，並保留 Thread 層的活動/附件資訊。
+9. **單價覆寫（TODO）**：目前 Drawer 的單價欄位僅暫存於 `properties.extAttrs.manualUnitPrices`。待 Phase 5.1 擴充 `QuotationPreviewRequestDTO` / `QuotationPreviewItemDTO` 及 `quotation_item` 欄位後，再改為正式的 `unitPriceOverride`/`pricingMode` 欄位並於 preview/create 時帶入。
+10. **Hub 篩選 / 分頁 / URL 同步**：`GET /api/quotation-threads` 已支援 `currentRevisionStatusCode.*`、`currentRevisionValidUntil.*` 以及 `ownerScope` 參數；「全部」固定傳 `ownerScope=MINE`（取可見 Owner 清單）、「我的報價」傳 `ownerScope=SELF`（強制 owner=本人）。List View 以 server-side 分頁載入並將條件同步到 URL query（回上一頁時仍保留）；Pipeline 模式沿用相同條件一次抓 500 筆資料並依狀態分欄。Detail 頁面與 Hub 之間透過 `sessionStorage.quotationHubRefreshToken` 交換刷新訊號，確保在詳情頁觸發 Workflow/轉單後回到 Hub 時會自動重新查詢。
 10. **Workflow Drawer UX**：Channel 改為下拉選單，若守衛要求 `channel/reason/validUntil` 會動態顯示欄位；`validUntil` 過期時會停用送出並顯示提示。Quick Create Drawer 中改以「取消 / 上一步 / 下一步」呈現，便於流程回饋。
 
+### API 串接與狀態管理策略（2025-11-21 新增）
+
+- **資料來源與分層**：
+  - Hub（List / Pipeline）改為呼叫 `GET /api/quotation-threads`，query 參數包含 `page`, `size`, `sort` 與 quick filter 映射的 criteria（例如：`ownerScope=MINE`、`currentRevisionStatusCode.in=DRAFT,SENT`）。回傳的 `X-Total-Count` 會存入 pagination state，Table 的「跳頁」輸入框直接操作 server-side page。
+  - 點選 Thread 後，右側 Drawer 立即呼叫 `GET /api/quotation-revisions?threadId.equals={threadId}&sort=revisionNo,desc` 載入 Timeline；同時透過 `GET /api/quotation-revisions/{id}`（必要時再打 `GET /api/quotation-items?revisionId.equals={id}`）取得 Tabs 所需的詳細資訊與金額快照。
+  - Attachments / Related Records 仍由相對應的 API（Document Service、Sales Order 列表）回填，並在 payload 未就緒時顯示 placeholder。
+  - Line / Pricing tab 在切換 Revision 時會同步呼叫 `GET /api/quotation-items?revisionId.equals={id}`，確保行項目與金額採後端計算結果；若 Revision 已被刪除則顯示空狀態並提示重新整理。
+- **前端資料模型**：
+  - 在 `src/types/sales/quotation.ts` 定義 Thread / Revision DTO 與 UI Model（`QuoteThreadSummary`, `QuoteRevisionSummary`, `QuoteRevisionDetail`），集中處理 BigDecimal → number、Status code → label、日期格式化等邏輯。
+  - `QuotesWorkspace` 保存兩組 state：列表分頁資料與 Pipeline 快取（Pipeline 會一次抓取 `size=200` 並依狀態分欄，以免拖曳時才重新打 API）；Drawer 另維護 `selectedThreadDetail` 與 loading/error 標記。
+- **錯誤處理與回寫**：
+  - 若 API 回傳 `400/409`，Toast 會顯示 `error.response?.data?.detail` 或預設訊息；List / Pipeline 頁面提供「重新整理」按鈕觸發 `refetch`。
+  - Drawer 切換 Revision 後若選取的版本已被刪除，改為顯示空狀態並提示使用者重新載入 Thread（同步紀錄在 `docs/migration/log.md`）。
+  - 後續在串 Workflow / Convert Drawer 時，沿用同一份 `QuotationService`，避免多處各自拼 query。
+
+### 近期進度與下一步（2025-11-21）
+
+- ✅ **已完成**
+  - `UI-03` / `UI-04`：List 與 Pipeline 皆改為串接 `GET /api/quotation-threads`，並依 `ownerScope` 與 Criteria 映射 quick filter；列表支援 server-side 分頁跳頁。
+  - `UI-03`：Drawer Summary + Timeline 讀取 `GET /api/quotation-revisions?threadId.equals=...`，並在切換 Revision 時維持最新版本（以後端資料為權威）。
+  - `UI-03`：Overview、Line、Pricing tab 串到 `GET /api/quotation-revisions/{id}` 與 `GET /api/quotation-items?revisionId.equals=...`，顯示幣別、付款條件、地址、行項目與金額拆解。
+  - `UI-05`（部分）：Workflow Drawer 已透過 `GET /api/quotations/{threadId}/events/options` 動態顯示可用動作，並可送出 `POST /api/quotations/{threadId}/events/{eventCode}`，完成後自動刷新 Thread/Pipeline/Drawer 狀態（目前入口包含 Detail Drawer、List 行動與 Pipeline 卡片；拖拉 / 批次快速動作待下一步）。
+- `UI-08`（部分）：Quick Create Drawer 已提供 3-Step 流程（基本資料 → 明細行 → 預覽/建立），可呼叫 `POST /api/quotations/preview` 與 `POST /api/quotations` 建立草稿並刷新 Hub/Pipeline。客戶 / Owner / SKU 現已連接後端查詢，下拉選單亦補齊通路、幣別、付款條件；並加入 AddressSnapshot 欄位。
+- **2025-11-21 更新**：ExtAttr 面板改為呼叫 `/api/quotation-revision-ext-attr-defs` 取得最新有效欄位定義，依 `dataType/requiredAttr` 動態渲染輸入元件（文字、數字、日期、布林下拉），並於前端先做必填檢核；送出 payload 時統一序列化為 `properties.extAttrs`，確保資料庫 Schema 調整後前端可立即繼承。
+- **2025-11-21 新增 API**：後端補上 `PUT /api/quotations/{threadId}/revisions/{revisionId}`，可重新呼叫 Pricing 並覆寫指定 revision（僅允許草稿/非終結狀態），為未來的「編輯現有草稿」與 Drawer Edit 模式打底。
+- **2025-11-22 UI**：Detail Drawer 新增「編輯草稿」按鈕，當前 revision 為 DRAFT 時可直接開啟 Quick Create Drawer（Edit 模式），串接上述新 API 以覆寫草稿內容，並沿用既有的 ExtAttr / 行項填寫流程。
+- **2025-11-21 新增**：Quick Create Drawer 延伸為「建立新版本」模式；Detail Drawer 增加「建立新版本」按鈕，會帶入 Thread/Revision/Line Items/ExtAttr 現有值並呼叫 `POST /api/quotations/{threadId}/revisions` 建立下一版。
+- **2025-11-22 新增**：Quick Create Drawer 的行項表格補上 UoM、稅別與「行折扣型態／行折扣值」欄位，全部串接後端 `/api/uoms`、`/api/tax-codes` 查詢並於 `QuotationPreviewRequest.items` 帶入 `uomId`、`taxCode`、`discountType`、`discountValue`；後端 `QuotationPreviewItemDTO` 也同步擴充並於 `QuotationCalculationService` 中計算折扣，Revision 落地時會保留行折扣資訊。
+- **2025-11-22 Attachments/Related**：Detail Drawer 的 Attachments Tab 已串接 `/api/document-links` 與 `/api/quotations/{threadId}/documents`；可上傳檔案（呼叫 `/documents/upload`）並選擇掛在 Thread 或當前 Revision，並顯示來源/大小/下載按鈕。Related Records Tab 串接 `/api/quotations/{threadId}/links` 呈現 Sales Order 連結摘要（狀態、金額、建立者）。
+- **2025-11-22 Attachments 進階**：附件卡片新增「設為主附件 / 取消主要」、「刪除」與確認對話框，並以徽章標示主要檔案。所有操作直接呼叫 `PATCH /api/document-links/{id}` 與 `DELETE /api/document-links/{id}`，完成後自動刷新列表並在錯誤時於 Drawer 顯示訊息。
+- 🔜 **下一步建議**
+  1. **Workflow Drawer / Quick Actions（對應任務 `UI-05`）**：依 `docs/specs/phase4-quotation/workflow-spec.md` 與 `api-spec.md` 串 `GET /api/quotation-revisions/{id}/workflow-info`，支援 SUBMIT / APPROVE 等事件，並整合 Pipeline 拖曳。
+  2. **Quick Create / Edit Drawer（`UI-06`）**：延伸 Quick Create 至正式 Edit Drawer（支援再編修、附件、ExtAttr def 讀取與驗證 — Quick Create 已完成 ExtAttr 部分），並於 Detail Summary 展示預覽/建立結果；後續可導入 SKU AutoComplete Debounce 與 Contact 選單。
+  3. **篩選/URL 同步（`UI-03` 項下加強）**：比照 `docs/specs/phase4-quotation/ui-spec.md` 的查詢需求，加入 Owner/Status 下拉與 URL query，同步回上一頁仍保留條件。建議依序從 Workflow Drawer 開始，可為後續 pipeline/Quick Action 整合打底。
+
 > 詳細欄位與流程說明仍以 Phase 4 Spec 為準；本藍圖主要聚焦前端如何串接與呈現。
+
+### 前端元件策略（補充）
+
+- **Table 選型**：採用 TanStack Table（react-table v8）作為核心，搭配 Ecme 的 Table/Pagination 元件客製 UI，兼顧可維護性與 server-side 擴充性。
+- **List View 快篩**：沿用 Ecme Sidebar Pane，在左側提供「我的報價 / 共享 / 標籤」等按鈕，短期先以前端靜態條件過濾，未來串接 ownerScope/status API。
+- **Detail Summary**：右側改為可縮放 Drawer（預設收合），展開時顯示 Overview + Tabs；Attachments 與 Related Records（Sales Order / Delivery / Workflow）拆成獨立 Tab，避免資訊混淆，並保留下載/跳轉操作。
+- **Revision Timeline**：Drawer 內加入 Timeline/Selector，列出所有 Revision，點選後可切換到歷史版本；Timeline 預設 highlight 最新 revision。此元件後續可擴充差異比較、Workflow guard 訊息。
+- **Footer**：Quotes Workspace 內的 PageContainer 關閉內建 footer（footer=false），避免與 Layout Footer 重複。
 
 ---
 

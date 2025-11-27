@@ -16,11 +16,14 @@
 | `POST /api/quotation-revisions/{id}/cancel` | POST | CANCEL action | `QuotationWorkflowResource.cancel` |
 | `POST /api/quotation-revisions/{id}/clone` | POST | Clone Revision | `QuotationWorkflowResource.cloneQuotation`, `QuotationWorkflowService.cloneQuotation` |
 | `POST /api/quotation-revisions/{id}/set-active` | POST | 設定 active Revision | `QuotationWorkflowResource.setActiveRevision` |
+| `GET /api/owners/lookup` | GET | Quick Create Owner 搜尋（Async Select，含權限過濾） | `OwnerResource.lookupOwners`, `OwnerService.lookup` |
 
 ## 2. DTO / Validation Notes
 
 * `QuotationThreadDTO` / `QuotationRevisionDTO`` fields (status, validUntil, currencyCode, totalAmount)` defined in `service/dto`.
 * Bean Validation annotations in DTO ensure `@NotNull` on `customerId`, `validUntil` etc.; service guard (e.g., `validateSubmitGuard`) double-checks semantics.
+* `QuotationPreviewRequestDTO` 自 Phase 4.2 起新增 `priceListId` 欄位：當前端傳入時，`PricingService.preview()` 會鎖定該價目表並在後續 `createDraft`/`createNextRevision`/`updateRevision` 中用於儲存 `QuotationRevision.priceList`。若未指定則維持原有的 Assignment 選價流程。
+* Quick Create Drawer 的 Owner 欄位改走 `GET /api/owners/lookup?keyword=`，此 endpoint 會依 `VOwnerVisible` 過濾可見 owner，預設上限 50 筆供 Async Select 使用。
 
 ## 3. Guard Error Codes
 

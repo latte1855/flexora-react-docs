@@ -70,6 +70,7 @@
 |--------------------------------------------------------------------------------|
 | Overview Tab (Two-column layout)                                               |
 |  - Primary Info (customer, owner, validity, channel)                           |
+|  - Price List card：顯示價目表名稱/通路/幣別（僅資訊）                           |
 |  - Address Snapshot (Billing / Shipping cards)                                 |
 |  - Summary cards (Subtotal, Discount, Tax, Grand Total)                        |
 |--------------------------------------------------------------------------------|
@@ -97,6 +98,8 @@
 │   Section 附件：AttachmentGrid（可拖拉上傳 / 選取 DocumentLink）                 │
 │ Footer: (取消) (儲存草稿) (送出並通知客戶)                                      │
 └───────────────────────────────────────────────────────────────────────────────┘
+
+- 客戶選定後 UI 會呼叫 `/api/pricing/price-lists/applicable` 取得推薦價目表，於下拉選單上方以 ⭐ 標示，並在尚未手動選擇價目表時自動帶入第一筆建議（同步幣別 / 通路鎖定）。  
 ```
 
 ### 3.4 Workflow / Convert Drawer

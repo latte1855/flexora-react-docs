@@ -7,9 +7,9 @@
 
 | 模組 | 前端狀態 | 後端狀態 | 下一步 / TODO | 參考文件 |
 | --- | --- | --- | --- | --- |
-| 報價（Phase 4） | ✅ Quick Create / Quote Editor / Workflow Tab 改用 `/api/quotations/transactions`；Timeline Segment + 事件 chips 已上線；Workflow Drawer 仍使用 `triggerEvent`（有備註）。 | ✅ Transaction API / 交易落地完成；工作流事件維持 `triggerEvent`；QuotationThread preset enum 已初步實作。 | • 修正 Hub preset 切換造成的多次 API 呼叫<br>• 行項表格/匯入、Preview 行明細與 PDF<br>• Workflow Drawer 若需整批儲存再改造 | `docs/specs/phase4-quotation/ui-spec.md`<br>`docs/ui/quotation-ui-implementation-plan.md` |
-| 庫存 / 採購（Phase 3） | ⏳ Wireframe 與規格撰寫中，尚未進入實作。 | ⏳ Replenishment/Reservation 規則撰寫中，尚未實作。 | • 補齊 `phase3-inventory` 規格<br>• 根據 spec 拆工單 | `docs/specs/phase3-inventory/*` |
-| 客戶/聯絡人模組 | ✅ Async Select 元件已提供篩選與 debounced 查詢，於報價模組 reuse。 | ✅ `CustomerResource` / `ContactResource` lookup API 可依關鍵字過濾；尚需補 owner scope 控制。 | • 大量資料下的 lazy load / caching 機制<br>• Saved filter / 權限控管 | `docs/ui/customer/*` |
+| 報價（Phase 4） | ✅ Quick Create / Quote Editor / Workflow Tab 改用 `/api/quotations/transactions`；Timeline Segment + 事件 chips 已上線；Workflow Drawer 仍使用 `triggerEvent`（有備註）。 | ✅ Transaction API / 交易落地完成；工作流事件維持 `triggerEvent`；QuotationThread preset enum 已初步實作。 | • 修正 Hub preset 切換造成的多次 API 呼叫<br>• 行項表格/匯入、Preview 行明細與 PDF<br>• Workflow Drawer 若需整批儲存再改造 | [`docs/modules/quotation/README.md`](modules/quotation/README.md) |
+| 庫存 / 採購（Phase 3） | ⏳ Wireframe 與規格撰寫中，尚未進入實作。 | ⏳ Replenishment/Reservation 規則撰寫中，尚未實作。 | • 補齊 `phase3-inventory` 規格<br>• 根據 spec 拆工單 | [`docs/modules/inventory/README.md`](modules/inventory/README.md) |
+| 客戶/聯絡人模組 | ✅ Async Select 元件已提供篩選與 debounced 查詢，於報價模組 reuse。 | ✅ `CustomerResource` / `ContactResource` lookup API 可依關鍵字過濾；尚需補 owner scope 控制。 | • 大量資料下的 lazy load / caching 機制<br>• Saved filter / 權限控管 | [`docs/modules/customer/README.md`](modules/customer/README.md) |
 | 其他模組 | ⏸ 尚未開發 | ⏸ 尚未開發 | • 依專案時程逐步展開 | `docs/architecture/OVERVIEW.md` |
 
 ## 使用方式

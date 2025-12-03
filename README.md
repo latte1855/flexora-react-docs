@@ -25,6 +25,7 @@ docs/
   decisions/       ← ADR / Decision Log
   guides/          ← 開發 / 作業 / 部署指南
   specs/           ← ERP 各模組功能規格（Phase-based）
+  modules/         ← 依模組整理的統一入口（逐步搬遷中）
   samples/         ← 範例資料（CSV / Excel / JSON）
   misc/            ← 其他未分類資訊（術語、TODO 等）
 ```
@@ -141,6 +142,14 @@ specs/
 * GLOSSARY（術語表）
 * TODO / Backlog
 * 版本演進紀錄
+
+---
+
+## 1.9 `modules/` — 模組入口（新）
+
+為了減少文件分散，每個模組會在 `modules/<module>/` 建立 README、spec、ui-spec、api-spec、implementation-plan 等統一入口。  
+目前尚在搬遷階段，文件內容仍連回舊的 `specs/phase*` 或 `ui/`，但往後查詢特定模組時可先從這裡進入。  
+模組索引請參考 [`modules/README.md`](modules/README.md)。 
 
 ---
 

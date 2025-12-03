@@ -35,6 +35,17 @@
 | 互動     | 無狀態；未來可延伸加入下載/預覽按鈕。                                      |
 | 使用範例 | Quotation Detail Page 附件區。                                             |
 
+## ContactLookupSelect
+
+| 項目     | 說明                                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 檔案     | `src/components/shared/ContactLookupSelect.tsx`                                                                                |
+| 用途     | 依照所選客戶呼叫 `/api/contacts/lookup` 取得聯絡人下拉選項（含 Owner 可視範圍過濾），提供 Quick Drawer / Full Editor 共用。 |
+| Props    | `customerId?: string`、`value: ContactOption | null`、`onChange(option)`、`placeholder`（可選）、`isDisabled`、`className`。      |
+| 特性     | 內建 AsyncSelect、支援 keyword 搜尋、會快取 server 回傳結果並在客戶切換時清空；無客戶時自動 disable 並提示「請先選擇客戶」。 |
+| 互動     | onChange 回傳 `{ value, label, email?, phone? }`；父層可決定是否將 label 寫回 `contactName`。                                   |
+| 使用範例 | QuickCreateDrawer 基本資訊區、QuoteEditorPage 左上基本欄位。                                                                   |
+
 ---
 
 ### 待辦 / 後續

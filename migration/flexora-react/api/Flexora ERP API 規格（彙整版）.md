@@ -166,6 +166,7 @@ skuId;uomCode;minQty;unitPrice;taxCode
 | -------- | ------------------------------------ | ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------- | ----------------- |
 | POST     | `/api/contacts`                      | 新增聯絡人       | 建立 Contact                                                                     | 儲存前檢查 `LOWER(contactNo)` 唯一（`deleted=false`） | `ContactResource` |
 | GET      | `/api/contacts`                      | 查詢聯絡人       | 分頁/條件查詢                                                                    | 依 Criteria                                           | `ContactResource` |
+| GET      | `/api/contacts/lookup`               | 聯絡人下拉       | `?keyword=&customerId=&limit=` 提供 1~100 筆精簡清單，僅顯示未刪除且符合 Owner 能見度 | 預設 limit=20、支援 `fullName/contactNo/email/phone/mobile` 模糊搜尋 | `ContactResource` |
 | GET      | `/api/contacts/{id}`                 | 讀取聯絡人       | 讀單筆                                                                           | —                                                     | `ContactResource` |
 | PATCH    | `/api/contacts/{id}`                 | 局部更新         | Merge-Patch                                                                      | 儲存前檢查唯一                                        | `ContactResource` |
 | PUT      | `/api/contacts/{id}`                 | 覆寫更新         | 全量更新                                                                         | 儲存前檢查唯一                                        | `ContactResource` |

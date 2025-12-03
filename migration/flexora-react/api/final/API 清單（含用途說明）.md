@@ -104,6 +104,7 @@ codex:
 | ----------------------------------------- | ------------ | ---------------------------------------------------------------- | ------------------- | ------------------- | ----------------------------------------------------- |
 | **POST `/api/contacts`**                  | 新增聯絡人   | 建立 Contact                                                     | 聯絡人主檔          | `ContactResource`   | 儲存前檢查 `LOWER(contactNo)` 唯一（`deleted=false`） |
 | **GET `/api/contacts`**                   | 查詢聯絡人   | 分頁/條件查詢（Criteria）                                        | 聯絡人主檔          | `ContactResource`   |                                                       |
+| **GET `/api/contacts/lookup`**            | 聯絡人下拉   | `?keyword=&customerId=&limit=` 提供 1~100 筆精簡清單，僅顯示未刪除/可視 Owner | 報價、SO 等下拉選單 | `ContactResource`   | 預設 limit=20，依 `fullName/contactNo/email/phone/mobile` 模糊搜尋，先依客戶過濾 |
 | **GET `/api/contacts/{id}`**              | 讀取聯絡人   | 讀單筆                                                           | 聯絡人主檔          | `ContactResource`   |                                                       |
 | **PATCH `/api/contacts/{id}`**            | 局部更新     | Merge-Patch                                                      | 聯絡人主檔          | `ContactResource`   |                                                       |
 | **PUT `/api/contacts/{id}`**              | 覆寫更新     | 全量更新                                                         | 聯絡人主檔          | `ContactResource`   |                                                       |

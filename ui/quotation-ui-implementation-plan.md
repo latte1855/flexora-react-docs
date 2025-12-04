@@ -17,7 +17,7 @@
 | ⏳ | 行項表格重構（table 模式 + 匯入/複製 + 稅別/折扣即時顯示）、Preview 行卡 + PDF | 目前仍以卡片張呈現，缺少表格 / 匯入 UI。 |
 | ✅ | Workflow Timeline Segments（全部/某版本/事件 chips）、流程圖互動同步 | Workflow Tab 已提供 THREAD/CURRENT/REVISION Segment、版本下拉、事件 chips 與清除按鈕，CURRENT 會顯示當前版本資訊並與流程圖目前狀態同步高亮。 |
 | ⏳ | Hub preset/filter 架構：quotePresets 配合後端 Enum、進階篩選（owner/status/date/customer）+ chips + 清除 + URL 同步 | 已完成 `quotePresets` + 進階篩選面板 + 可刪除 chips + URL query 同步，並新增「視圖」chip/Helper；Saved Filters 仍待規劃。 |
-| ⚠️ | Hub 篩選 URL 同步仍不穩定：切換 preset 時仍會重覆觸發 API（VIP→ALL→VIP） | `QuotesWorkspace` 的 searchParams guard 需再調整；暫存 issue，待後續修正。 |
+| ✅ | Hub 篩選 URL 同步修正完成 | `QuotesWorkspace` 以 URL query 作為唯一來源，並加入 query key guard，List/Pipeline 各只會觸發一次 API。 |
 | ✅ | Quick Create / Workflow / Pipeline 動作完成後統一刷新 Hub（透過 transaction API 結果） | 以 `refreshAfterThreadChange` 包裝 loadThreads/loadPipeline + Drawer focus，所有 thread mutation（Quick Create / Quote Editor / Workflow Drawer / Pipeline 拖曳）都會走同一流程。 |
 | ⏳ | 文件 TODO / Done 台帳 | 本文件與 `ui-spec` 新增進度表，但需持續在每次功能完成時更新。 |
 

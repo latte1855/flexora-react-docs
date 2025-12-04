@@ -15,6 +15,22 @@
 
 > `PriceList` 是否獨立模組？目前規劃為「共享資源」，可在 Product 模組快速連結，也能在未來抽成 Pricing 模組。文件中先記錄兩種做法的差異。
 
+### ERD（摘要）
+
+- `ItemGroup (1) ── (n) Item`
+- `Item (1) ── (n) ItemSku`
+- `ItemSku (1) ── (n) ItemPrice`
+- `PriceList (1) ── (n) ItemPrice`
+- `PriceList` 可對應多個客戶群／通路條件；若未來獨立模組則透過 API 提供建議價。
+
+欄位參考（依現有 entity）：
+- `Item`: `code`, `name`, `hasVariants`, `status`, `itemGroupId`.
+- `ItemSku`: `skuNo`, `uomId`, `taxCode`, `barcode`, `defaultWarehouseId`.
+- `PriceList`: `name`, `currency`, `channel`, `ownerId`, `status`.
+- `ItemPrice`: `priceListId`, `itemSkuId`, `unitPrice`, `effectiveFrom/To`, `discountType`.
+
+> 待核對 `com.asynctide.flexora.domain` 與 `.jhipster` 定義後補上完整欄位表與關聯圖。
+
 ## 關聯模組
 
 - **Quotation**：建立/編輯報價時需 Async Select SKU、帶入 PriceList 建議價。
@@ -34,13 +50,28 @@
    - 在 SKU Drawer 顯示「各價目表建議價」，可跳轉到 PriceList 模組完整編輯。  
    - 支援匯入或同步 ERP 的價目資料。
 
+## 審批 / 權限 / Versioning
+
+- **角色**：產品管理（編輯 Item/SKU）、行銷定價（管理 PriceList/ItemPrice）、營運/審批者（核准上架或價格）。  
+- **狀態建議**：
+  - Item：`DRAFT / IN_REVIEW / ACTIVE / RETIRED`
+  - PriceList：`DRAFT / APPROVED / ARCHIVED`
+- **流程**：
+  1. 新品建立後可直接上架，或進入 `IN_REVIEW` 等候審批。
+  2. PriceList 調整時可選擇「立即生效」或「送審」；審批後才同步到報價/訂單。
+  3. 審批機制若尚未實作，可先記錄在 TODO，中期再補 workflow handler。
+- **樂觀鎖 / 版本**：
+  - 目前 entity 的 `version` 欄位未加 `@Version`，僅為 placeholder。  
+  - 若要啟用，需在 entity/service 加上樂觀鎖並於 API 回傳 version，前端儲存時攜帶。
+
 ## TODO
 
-- [ ] 補齊 ERD 與欄位說明（含 hasVariants 邏輯）。
-- [ ] 規範 Product / SKU 建立與啟用流程（草稿→上架→停售）。
-- [ ] 定義 PriceList 是否獨立模組或由 Product 代理的決策準則。
-- [ ] 完整化 ItemPrice 版本控制、幣別與稅別政策。
+- [ ] 補齊 ERD 圖像與欄位說明（含 hasVariants 邏輯與 existing table 對照）。
+- [ ] 規範 Product / SKU 建立與啟用流程（草稿→審批→上架→停售）。
+- [ ] 決定 PriceList 模組歸屬與審批策略，若獨立需設計對應 API。
+- [ ] 完整化 ItemPrice 版本控制、幣別與稅別政策，以及權限矩陣。
 - [ ] 與 Inventory / Quotation / Procurement 的資料契約、Async Select API。
+- [ ] Variant Generator / 匯入流程與 CSV 欄位定義。
 
 ## TODO
 

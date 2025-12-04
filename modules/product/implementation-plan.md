@@ -20,6 +20,8 @@
 | PROD-05 | SKU Lookup Service | Async Select + 篩選（關鍵字、ItemGroup、PriceList） | ⏳ |
 | PROD-06 | UI – Catalog Workspace | Hub + List + Drawer；Pipeline 需求另列 TODO | ⏳ |
 | PROD-07 | PriceList UI/提示 | 在 SKU Drawer 顯示建議價，連結 PriceList 頁面 | ⏳ |
+| PROD-08 | Product Transaction API | 規劃整單儲存 payload（Item + SKU + ItemPrice） | ⏳ |
+| PROD-09 | PriceList 審批/歷史 | 若啟用 workflow，新增 `submit/approve/history` 端點 | ⏳ |
 
 ## 3. TODO / 風險
 
@@ -27,5 +29,6 @@
 - [ ] Variant Generator 與匯入流程（CSV / ERP 同步）。
 - [ ] 與 Inventory 模組共享 UoM、稅別定義。
 - [ ] 行銷/產品組對價格管理的權限需求、版本審核。
+- [ ] Lookup 與 Transaction API 需評估與報價模組共用 DTO/Service，避免重複邏輯。
 
 > 本檔為骨架，待正式展開時再逐項填入細節與進度。

@@ -1,36 +1,70 @@
 # Product Module – UI Spec (草稿)
 
-## 介面組成
+## 全域佈局
 
-| 區塊 | 說明 |
-| --- | --- |
-| **Filter Hub** | 與報價 Workspace 同版型：左側列出 Preset（全產品、僅上架、缺價目表等）＋進階篩選（關鍵字、ItemGroup、Owner、狀態、PriceList）。 |
-| **主工作區** | 預設 List View；Pipeline 模式保留 TODO（若未來有「新品導入→上架→停售」流程再啟用）。 |
-| **操作列** | 「快速建立產品」 Drawer（最小欄位）＋「建立產品」滿版編輯（含 SKU/Price 卡片）。按鈕位置沿用報價、客戶模組。 |
+```
+┌──────── Filter Hub ────────┐┌───────── Workspace ─────────┐
+│Preset 切換 + Chips         ││操作列：快速建立 / 建立產品      │
+│- 全部產品 ALL             ││View 切換：List / Pipeline*   │
+│- 僅上架                    ││列表 / Pipeline 本體          │
+│- 缺價目表                  ││右側 Detail（可折疊）          │
+│- 客製（收藏的條件）        │└────────────────────────────┘
+└────────────────────────────┘
+```
+
+- **Preset 行為**：點選後更新 `ownerScope + filters`，並在 Chips 顯示條件（同報價 Hub）。
+- **進階篩選**：搜尋（支援中文 IME，Enter 或按「套用」才觸發）、ItemGroup、分類、Owner、狀態、PriceList、是否有 Variants。
+- **操作列**：左側為 `快速建立產品`（Drawer，收集基本欄位）、右側黑底白字 `建立產品`（滿版編輯）。
+- **Detail Panel**：點選列表行時於右側展開，顯示摘要與快速動作（啟用/停售、複製 SKU），與報價 Summary 一致。
+- **Pipeline 視圖**：*待確認*；如無流程需求則隱藏切換器，TODO 已於 implementation plan 註記。
 
 ## List View
 
-- 欄位：SKU/Item 名稱、ItemGroup/分類、UoM、稅別、狀態、最後更新者。
-- 支援多選批次啟用/停售、標籤設定。
-- Row 點擊 → 開啟右側 Detail / Drawer，內含 SKU 表格與 PriceList 摘要。
+| 欄位 | 說明 | 互動 |
+| --- | --- | --- |
+| Item / SKU 名稱 | 顯示 Item 名稱 + SKU 編號；若 `hasVariants`，以 Badge 標示 | 點擊 → Detail Panel |
+| ItemGroup / 分類 | 兩行顯示（Group 上面、Category 下面） | 可排序/篩選 |
+| UoM / 稅別 | 顯示預設 UoM、稅代碼 | Drawer 中可編輯 |
+| Status | 標示 `草稿 / 審核中 / 上架 / 停售` | 直接顯示，批次操作可改變 |
+| Last Modified | 使用者 + 時間 | 依最新更新排序 |
 
-## Item Detail / 編輯畫面
+- **批次操作**：Checkbox 選取後，可批次「啟用/停售」、「移動至 ItemGroup」、「同步價目表」。
+- **Row Action**：Hover 顯示「編輯」、「複製 SKU」、「查看價目」。
+- **空狀態**：提供「建立產品」CTA 與導向文案（與報價一致）。
 
-1. **資訊卡**：ItemGroup、產品主檔欄位、`hasVariants` 開關。
-2. **SKU 區塊**：表格 + Drawer。  
-   - Drawer 內容：UoM、稅別、包裝、條碼、預設倉庫。  
-   - 內嵌 PriceList preview（顯示各價目表建議價）。
-3. **變形（Variants）設計**：若 `hasVariants=true`，提供維度選擇器與批次產生 SKU 流程。
-4. **Ext Attr / 附註**：與報價/客戶模組一致的三欄網格輸入。
+## Detail / Drawer / Full Editor
 
-## PriceList / ItemPrice
+1. **Item Info 卡**：顯示 ItemGroup、品牌、分類、`hasVariants`（toggle）。這裡也顯示 PriceList 建議情況（例如「3 個價目表已設定」）。
+2. **SKU 表格**：與 List 類似，但附加庫存狀態、條碼。  
+   - 表格上方提供「新增 SKU」「匯入 CSV」「Variant Generator」。  
+3. **SKU Drawer**：欄位包含：
+   - 基本資訊：SKU No、名稱、描述、啟用狀態。
+   - 資料屬性：UoM（Async Select）、稅別、包裝、條碼、預設倉庫。
+   - PriceList 摘要：以 Accordion 或表格顯示各價目表的建議價、有效期，並提供「編輯價目表」連結。
+   - Ext Attr：三欄網格（若該 SKU 有客製欄位）。
+4. **Variant Flow**（僅 `hasVariants=true`）：
+   - Step 1：選擇維度（顏色、尺寸…），設定維度值。
+   - Step 2：系統預覽 SKU 組合，使用者可取消/重新命名。
+   - Step 3：產生 SKU，進入表格；每個 SKU 還是可單獨編輯。
+5. **Full Editor（建立產品）**：
+   - 版面沿用報價整單編輯：左側主資訊卡 + SKU 區塊，右側為 PriceList 摘要/操作紀錄。
+   - Page Footer：固定顯示「取消 / 儲存 / 送審」，若流程未啟用則只顯示 儲存。
 
-- List 顯示所有 PriceList，可由產品模組進入或獨立入口。  
-- 在 SKU Drawer 或 PriceList 詳細頁中維護 ItemPrice，支援匯入/複製、版本歷史。
-- 若未來 PriceList 需要獨立模組，可在 README 中連結。
+## PriceList / ItemPrice 互動
 
-## Reference / TODO
+- **在 SKU Drawer**：顯示一個簡易表格：
+  | 價目表 | 建議價 | 幣別 | 狀態 | 有效期 |
+  - 點「編輯」跳至 PriceList 頁面（或打開子 Drawer）。
+  - 若缺少價目表，顯示警示訊息（同報價缺價目提示）。
+- **PriceList 主頁**（可獨立 / 由產品連結維護）：
+  - Hub + List 佈局，與產品一致。
+  - 支援一次對多個 SKU 批次調價或匯入。
+- **審批提示**：若 PriceList 有審批流程，在 Drawer/Detail 中顯示「待審」「已核准」標籤。
 
-- [ ] 將既有 wireframe（`docs/specs/phase3-inventory/product*.md`、`docs/ui/quotation-ui-wireframe.md`）搬遷至此。
-|- [ ] Pipeline 模式需求確認（目前註記在 implementation plan）。
-|- [ ] 價格預覽與報價模組互動詳細流程。
+## TODO / 待補
+
+- [ ] 產出 wireframe 截圖並嵌入（可引用 Figma 或原型圖）。
+- [ ] Pipeline 模式需求確認（例如新品導入流程）；若取消需更新 README。
+- [ ] PriceList 子 Drawer / 全頁畫面細部欄位（含匯入流程）。
+- [ ] Variant Generator 的錯誤處理（重複 SKU、缺維度值）。
+- [ ] 與報價、庫存共用的 Async Select 元件在畫面中的置入示例。

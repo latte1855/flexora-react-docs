@@ -13,16 +13,19 @@
 
 | ID | 任務 | 說明 / 備註 | 狀態 |
 | --- | --- | --- | --- |
-| PROD-01 | Product Entity / Repository / REST | 定義產品主檔欄位、狀態 | ⏳ |
-| PROD-02 | Item SKU + Default UoM/Tax | 供報價/庫存使用的 SKU 主檔 | ⏳ |
-| PROD-03 | Pricebook / ItemPrice API | 多幣別、通路、有效日期 | ⏳ |
-| PROD-04 | SKU Lookup Service | Async Select + 篩選（關鍵字、價目表） | ⏳ |
-| PROD-05 | UI – Catalog / SKU Workspace | 列表 + Drawer 編輯 | ⏳ |
+| PROD-01 | `ItemGroup` / `Item` Domain | 建立產品線、`hasVariants` 欄位與 workflow | ⏳ |
+| PROD-02 | `ItemSKU` 表格 + Drawer | 支援 UoM、稅別、條碼、Variant Generator | ⏳ |
+| PROD-03 | PriceList vs. Product 邏輯 | 決定是否獨立模組 / 共享入口，設計 API | ⏳ |
+| PROD-04 | `ItemPrice` CRUD / 匯入 | 多幣別、通路、有效日期，並供報價查詢 | ⏳ |
+| PROD-05 | SKU Lookup Service | Async Select + 篩選（關鍵字、ItemGroup、PriceList） | ⏳ |
+| PROD-06 | UI – Catalog Workspace | Hub + List + Drawer；Pipeline 需求另列 TODO | ⏳ |
+| PROD-07 | PriceList UI/提示 | 在 SKU Drawer 顯示建議價，連結 PriceList 頁面 | ⏳ |
 
 ## 3. TODO / 風險
 
-- [ ] 確認現有資料表（`item_sku`, `price_list`, `item_price`）是否需要遷移或擴充。
+- [ ] 確認 `item`, `item_sku`, `price_list`, `item_price` 的現況與遷移策略。
+- [ ] Variant Generator 與匯入流程（CSV / ERP 同步）。
 - [ ] 與 Inventory 模組共享 UoM、稅別定義。
-- [ ] 行銷/產品組對價格管理的權限需求。
+- [ ] 行銷/產品組對價格管理的權限需求、版本審核。
 
 > 本檔為骨架，待正式展開時再逐項填入細節與進度。

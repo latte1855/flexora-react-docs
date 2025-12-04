@@ -5,10 +5,12 @@
 
 | 文件 | 說明 |
 | --- | --- |
-| [spec.md](./spec.md) | 功能 / 資料模型需求（暫為 TODO） |
+| [spec.md](./spec.md) | 功能 / 資料模型需求（含 ItemGroup / Item / ItemSKU / PriceList） |
 | [ui-spec.md](./ui-spec.md) | 介面與互動草稿 |
 | [api-spec.md](./api-spec.md) | REST/交易 API 草案 |
 | [implementation-plan.md](./implementation-plan.md) | 任務拆解 / 進度追蹤 |
+
+> PriceList 目前視為本模組的共享子系統；若未來要獨立為 Pricing 模組，請於 implementation plan 中更新決策。
 
 相關歷史文件：
 

@@ -115,3 +115,13 @@
 - [ ] PriceList 權限與審批流程細節（狀態轉換、通知）。
 - [ ] 與報價模組的交易 API（例如 `POST /api/quotations/preview` 時需要 SKU 值/價目表）是否需要 cache。
 - [ ] 若 PriceList 最終獨立成模組，需要在 `README` 與 `PROJECT_STATUS` 更新對應關係。
+- [ ] 參考報價模組整單儲存（transaction）需求，評估是否提供 `POST /api/items/transactions` 之類的複合 API，一次寫入 Item + SKU + ItemPrice，減少前端多次呼叫並確保一致性。
+- [ ] 若實作 Transaction API，需定義 payload：
+  ```json
+  {
+    "item": { ... },
+    "skus": [ { ... } ],
+    "prices": [ { priceListId: 20, skuNo: "...", unitPrice: 1000 } ]
+  }
+  ```
+  以及 rollback / 錯誤回饋格式。

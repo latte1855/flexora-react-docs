@@ -64,4 +64,6 @@
 - [ ] 決定是否整合為 Transaction API（類似 Quotation Transaction）以降低多次呼叫。  
 - [ ] 設計共用 DTO（`InventoryBalanceDTO`, `InventoryTransactionDTO`, `ReservationDTO`）。  
 - [ ] 權限：依 Warehouse/Team 控管，並提供審計日誌。  
-- [ ] 定義錯誤碼（例如 `inventory.insufficientQty`, `inventory.serialMismatch`）。  
+- [ ] 定義錯誤碼（例如 `inventory.insufficientQty`, `inventory.serialMismatch`, `inventory.reservationExpired`）。  
+- [ ] 若需通知/事件（補貨警示、保留到期），需定義 Webhook 或內部事件。  
+- [ ] 匯入/匯出（盤點、序號、調整）所需的 API 與批次狀態查詢。  

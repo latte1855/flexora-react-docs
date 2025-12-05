@@ -27,13 +27,13 @@
 
 ## 核心流程
 
-1. **入庫 / 收貨**：Purchase Receipt → `InventoryTransaction` (RECEIPT) → 更新 Inventory Balance。  
+1. **入庫 / 收貨**：Purchase Receipt → `InventoryTransaction` (RECEIPT) → 更新 Inventory Balance；若有質檢流程，可先進入 `QC` 狀態再入帳。  
 2. **出貨 / Issue**：Delivery → `InventoryTransaction` (ISSUE) → Reserved → On Hand；記錄 serial/lot。  
-3. **保留 / Allocation**：Sales Order 建立 → 依策略鎖定 qtyReserved；取消時釋放。  
+3. **保留 / Allocation**：Sales Order 建立 → 依策略鎖定 qtyReserved；取消或逾期時釋放並通知。  
 4. **調整 / Transfer**：手動或批次調整，支援倉庫間/儲位間轉移。  
 5. **盤點**：建立 Stock Count → 匯入盤點結果 → 差異轉為 Adjustment Transaction。  
 6. **補貨建議**：每日排程計算 On Hand + 在途 + 保留，若低於 Min 則產生 Replenishment Task，對應 Purchase / Manufacturing。  
-7. **成本 / FIFO**：可選 FIFO / Average，Transaction 記錄成本來源以供會計對帳。  
+7. **成本 / FIFO**：可選 FIFO / Average，Transaction 記錄成本來源以供會計對帳；若與 Finance 整合需定義帳務 API。  
 
 ## TODO / 待補內容
 
@@ -43,5 +43,7 @@
 - [ ] API 介面整理（`InventoryResource`, `InventoryTransactionResource`, `StockCountResource`, `ReservationResource` 等）。  
 - [ ] UI 對應（Workspace、Drawer、盤點工具、補貨任務）。  
 - [ ] 匯入工具與權限規則。  
+- [ ] 通知 / 事件：補貨警示、保留即將到期提醒、盤點任務提醒。  
+- [ ] 若需與外部 WMS 互通，定義資料交換格式與同步策略。  
 
 後續若展開開發，請依此骨架擴充 spec、ui-spec、api-spec，並同步更新 `implementation-plan.md`。  

@@ -72,5 +72,7 @@ GET /api/delivery-notes/lookup?keyword=DN-2025&salesOrderId=&status=&limit=20
 - [ ] 確認現有 Controller 是否已有 `ship`, `confirmDelivery` 等操作，若無需新增。  
 - [ ] 定義 Transaction API payload 與錯誤處理。  
 - [ ] Bulk 操作（序號匯入、包裝匯入）需求。  
-- [ ] 與 WMS/外部物流的同步接口（若有）。  
-- [ ] 若 Delivery 會產生 Invoice/成本，需記錄對應 API。
+- [ ] 與 WMS/外部物流的同步接口（Webhook / EDI）。  
+- [ ] 若 Delivery 會產生 Invoice/成本，需記錄對應 API。  
+- [ ] 通知 / 追蹤：定義物流事件回傳 API、重送策略、推播格式。  
+- [ ] 支援部分出貨 / 多次出貨：API 需傳回行項餘量並更新 SO 連動。  

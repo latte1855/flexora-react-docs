@@ -40,11 +40,31 @@
 6. **Trace 預覽**：輸入 SKU + Qty + 客戶後，顯示僅此規則計算結果，方便驗證。
 7. **匯入/匯出**：Drawer Footer 提供「下載範本」連結；Import 面板列出必填欄位與錯誤訊息。
 
+### 欄位驗證
+
+| 欄位 | 規則 | 錯誤提示 |
+| --- | --- | --- |
+| ruleCode | 必填且唯一；僅允許 A-Z0-9- | `pricing.rule.code.invalid` |
+| priority | 必須為正整數；若拖動排序則顯示影響清單 | Toast |
+| channel / customerGroup / itemGroup | 可為空代表 ALL；多選限制 20 筆 | Inline |
+| effectivity | `from <= to`；若空白視為永久 | Date picker error |
+| formula | 透過 Monaco 檢查語法與欄位；顯示行列號 | 編輯器下方錯誤列 |
+| approvalState | 若 workflow 啟用，草稿才能編輯；顯示 badge | Workflow panel |
+
 ## PriceList Assignment
 
 - 以 Hub + List 呈現客戶群/通路與 PriceList 的 mapping。  
 - Drawer 可設定優先權、有效日期；支援匯入/批次修改。  
 - Detail Panel 顯示已套用的客戶 / 地區列表。
+
+### Assignment Drawer 欄位
+
+| 欄位 | 規則 |
+| --- | --- |
+| priceListId | 必填；僅顯示使用者有權限管理的價目表 |
+| targetType/targetId | `CUSTOMER`, `GROUP`, `CHANNEL`, `REGION`；多選時需檢查重複 |
+| effectiveFrom/To | 不可交錯；若設 `from` 過去日期需提示 |
+| priority | 0~999；數字越小優先 |
 
 ## Pricing Preview / Trace
 
@@ -65,6 +85,20 @@
 - Wireframe：`https://figma.com/file/TBD/pricing-trace?node-id=trace-viewer`。
 - 支援「儲存 Trace」與「分享 Link」，可供報價/產品人員檢視。  
 - 當試算失敗時，在右側顯示錯誤資訊（如缺價目表、規則衝突）。
+
+### 匯入/匯出（PriceList / ItemPrice）
+
+| CSV 欄位 | 備註 |
+| --- | --- |
+| priceListCode | 必填；若不存在回傳 `pricing.import.priceListNotFound` |
+| skuNo | 必填；允許系統自動對應 skuId |
+| unitPrice | 必填且 >= 0 |
+| currency | 選填；預設沿用 PriceList |
+| discountType / discountValue | ENUM(`NONE`,`PERCENT`,`AMOUNT`) |
+| effectiveFrom / effectiveTo | ISO 日期；`to` 可為空 |
+| notes | 選填 |
+
+匯入流程：操作列點擊「匯入」→ 上傳 → 預覽 → 顯示錯誤列（包含行號、訊息）→ 送出背景 Job → 右上通知顯示進度並附 `traceNo` 連結。匯出按目前 Filter 輸出 CSV/XLSX。
 
 ## TODO
 

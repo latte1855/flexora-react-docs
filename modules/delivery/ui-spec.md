@@ -23,6 +23,16 @@
   Pipeline (若啟用)：Packing → Ready → Shipped
   ```
 
+### Pipeline 規則（若啟用）
+
+| 狀態 | 代碼 | 可拖曳至 | 條件 | 提示 |
+| --- | --- | --- | --- | --- |
+| 打包中 | PACKING | READY | 已建立至少一個包裹並指定重量 | 缺少包裹則彈窗 |
+| 待出貨 | READY | SHIPPED | 承運商、追蹤號碼已填、出貨日期>=今天 | 若庫存未扣減顯示警示 |
+| 已出貨 | SHIPPED | DELIVERED | 收到物流事件或手動確認 | 必須輸入實際送達日期 |
+| 已送達 | DELIVERED | CLOSED | 所有行項完成/退款結清 | 僅管理員可結案 |
+| 已取消 | CANCELLED | — | 只能透過 Workflow 按鈕 | 需輸入理由 |
+
 ## Detail Panel / Drawer
 
 1. **Detail Panel**：顯示 Delivery No、Sales Order、Warehouse、狀態、地址、Tracking。  
@@ -33,6 +43,18 @@
    - 行項：選擇 Sales Order 行項與出貨數量，顯示已出/剩餘。  
    - Package 子卡：新增包裹、指定重量/尺寸、序號。  
    - Ext Attr：三欄網格輸入（例如溫控、特殊標籤）。
+
+### 欄位驗證
+
+| 區塊 | 欄位 | 規則 |
+| --- | --- | --- |
+| 基本 | salesOrderId | 必填；SO 狀態需為 APPROVED |
+| 基本 | warehouseId | 必填；若倉庫無可出貨權限顯示錯誤 |
+| 基本 | shippingDate | 不得早於今天；若空白顯示警示 |
+| 承運商 | carrierId / trackingNo | `READY → SHIPPED` 前必填；tracking 格式依承運商顯示遮罩 |
+| 行項 | qtyShipped | `<= qtyRemain`；若輸入 IME 需防止 NaN |
+| Package | weight | 必須 >0，支援公斤/磅轉換 |
+| Serial | serials | 數量需與 qty 對應，掃碼時不可重複 |
 
 ## Package / Serial UI
 
@@ -47,6 +69,12 @@
   │Pkg002  1.2kg     │P-100 SN002           │
   └──────────────────┴──────────────────────┘
   ```
+
+### 匯入 / 掃碼
+
+- 行項與包裹支援 CSV 匯入，欄位：`packageNo,carrierCode,trackingNo,skuNo,qty,weight,serials`。  
+- 匯入流程：上傳 → 預覽 → 顯示錯誤列（例如 `delivery.import.invalidTracking`）→ 套用。  
+- 掃碼模式：側邊顯示掃描進度、允許切換單件/批次模式，序號重複時即時警示。
 
 ## 與 Sales Order / Warehouse
 

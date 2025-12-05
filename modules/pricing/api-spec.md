@@ -22,14 +22,53 @@
 
 ## 2. Pricing Engine
 
-- `POST /api/pricing/preview` 或 `/api/pricing`：輸入 `skuId`, `quantity`, `customerId`, `priceListId`, `channel`，回傳 `unitPrice`, `discount`, `traceId`。  
-- 需支援批次預覽（`lines: []`），供報價/訂單使用。  
-- 建議定義 Request/Response DTO，包含 `priceListName`, `ruleApplied`, `messages`。
+- `POST /api/pricing/preview``：輸入 `lines` 陣列，並可選擇 `returnTrace=true`。  
+```json
+{
+  "customerId": 501,
+  "priceListId": 2,
+  "channel": "WEB",
+  "currency": "TWD",
+  "lines": [
+    { "lineId": "Q1L1", "skuId": 1001, "qty": "5", "basePrice": "500.00" }
+  ],
+  "options": { "returnTrace": true, "dryRun": true }
+}
+```
+- Response：
+```json
+{
+  "lines": [
+    {
+      "lineId": "Q1L1",
+      "unitPrice": "450.00",
+      "discountAmount": "50.00",
+      "ruleApplied": "VIP-5OFF",
+      "traceId": "PRC-TRACE-20251203-001"
+    }
+  ],
+  "priceListName": "VIP-2025",
+  "messages": ["pricing.preview.success"]
+}
+```
+- 需支援批次預覽與錯誤列表（當某行錯誤，不影響其他行，回傳 `errors:[{lineId,message}]`）。
 
 ## 3. Trace API
 
 - `GET /api/pricing/trace/{traceId}`：取得計算步驟，欄位包含 `rules`, `conditions`, `calcSteps`, `finalPrice`。  
-- 若要提供即時 trace，可允許 `POST /api/pricing/trace`，輸入條件後直接回傳 trace。
+- 若要提供即時 trace，可允許 `POST /api/pricing/trace`，輸入條件後直接回傳 trace。  
+- Response 範例：
+```json
+{
+  "traceId": "PRC-TRACE-20251203-001",
+  "input": { "skuId": 1001, "qty": "5", "customerId": 501 },
+  "steps": [
+    { "ruleCode": "VIP-5OFF", "matched": true, "condition": "customerGroup == VIP", "calc": "basePrice * 0.95", "result": "450.00" },
+    { "ruleCode": "PROMO-XMAS", "matched": false }
+  ],
+  "finalPrice": "450.00"
+}
+```
 
 ## 4. PriceList / ItemPrice API
 
@@ -43,7 +82,9 @@
 | GET | `/api/price-lists/{id}/history` | workflow 歷史/評論 | ⛔ |
 | GET | `/api/item-prices` | 依價目表、SKU 查詢價格 | ✅ |
 | POST | `/api/item-prices` | 建立/更新 SKU 價格（支援整批 lines） | ⛔ |
-| POST | `/api/item-prices/import` | 匯入（CSV/XLSX） | ⛔（建議導入背景 Job，回傳 traceNo） |
+| POST | `/api/item-prices/transactions` | 整批寫入（Item + Price） | ⛔ |
+| POST | `/api/item-prices/import` | 匯入（CSV/XLSX），回傳 traceNo | ⛔ |
+| GET | `/api/item-prices/import-jobs/{traceNo}` | 查詢匯入結果與錯誤 | ⛔ |
 | GET | `/api/item-prices/export` | 匯出目前價格 | ⛔ |
 
 **Transaction payload 建議**
@@ -61,7 +102,6 @@
 priceListCode,skuNo,unitPrice,discountType,effectiveFrom,effectiveTo,currency
 WEB-2025,P-100-RED-500,450,PERCENT,2025-01-01,,TWD
 ```
-- `/import` 回傳 `{"traceNo":"PRC-IMPORT-001","errors":[{"row":3,"message":"pricing.error.invalidSku"}]}`。  
 - `/import` 回傳 `{"traceNo":"PRC-IMPORT-001","errors":[{"row":3,"message":"pricing.error.invalidSku"}]}`。  
 - 匯入完成後可透過 `GET /api/item-prices/import-jobs/{traceNo}` 查詢狀態。  
 - `/export` 支援 filter：`priceListId`, `skuNo`, `onlyActive`。  

@@ -20,6 +20,27 @@
 - **操作列**：`建立調整單`（Drawer）、`轉移`、`盤點`、`補貨建議`。
 - **Wireframe 參考**：`https://figma.com/file/TBD/flexora-inventory?node-id=hub`（Balance/Reservation/Task 視圖、Drawer）。待設計上稿後貼入截圖。
 
+### Tabs 細節（ASCII）
+
+**Balance**
+```
+SKU | Warehouse | On Hand | Reserved | Available | Min/Max | Health
+P-100-RED-500 | WH-A | 120 | 40 | 80 | 50/200 | Healthy
+```
+
+**Reservation**
+```
+Resv No | 來源 (SO/Project) | Warehouse | Qty | DueDate | Status | 操作
+RSV-001 | SO-2025-0001-10   | WH-A      | 20  | 2025/01/15 | ACTIVE | [釋放][延長]
+```
+
+**Task**
+```
+Task No | 類型 (盤點/補貨) | Warehouse | Responsible | Status | Next Action
+TASK-020 | 補貨           | WH-B      | user03      | TODO   | [轉 PO]
+```
+可切換 Pipeline：`TODO → IN_PROGRESS → POSTED`，與報價 Pipeline 元件共用。
+
 ## Detail Panel
 
 - **摘要卡**：SKU、Warehouse、On Hand、Reserved、Available、Cost。  
@@ -38,6 +59,24 @@
 3. **Reservation Drawer**：建立或修改保留條件（來源單據、數量、到期日）。  
 4. **Stock Count Drawer**：盤點任務設定、套用儲位與負責人，並可匯入盤點結果。  
 5. **Replenishment Task Drawer**：顯示建議補貨數量、來源 Purchase / Manufacturing。
+
+### 匯入 / 掃碼流程
+
+1. 使用者點擊 `匯入 CSV` 或 `掃碼模式`。  
+2. Modal 顯示欄位說明與範本下載。  
+3. 上傳後進入預覽頁，顯示有效筆數與錯誤列（含行號、錯誤訊息 `inventory.import.invalidSku` 等）。  
+4. 按「套用」後觸發背景 Job，右上角通知顯示 `traceNo` 與進度，完成後可下載錯誤報告。
+
+CSV 欄位範例：
+
+| 類型 | 欄位 | 備註 |
+| --- | --- | --- |
+| Adjustment | `skuNo,warehouseCode,qty,reason,lot,serials` | qty 可正負，serials 用 `;` 分隔 |
+| Transfer | `skuNo,fromWarehouse,toWarehouse,qty,binFrom,binTo` | |
+| Stock Count | `skuNo,warehouseCode,binCode,countQty` | 用於盤點結果 |
+| Reservation | `salesOrderNo,lineNo,skuNo,warehouseCode,qty,dueDate` | 產生/更新保留 |
+
+掃碼模式：側邊面板顯示掃描結果，支援單件/批次模式、連續掃描與手動輸入。
 
 ## Dashboard / Report
 

@@ -33,7 +33,8 @@ POST /api/delivery-notes/transactions
 }
 ```
 
-一次寫入 Delivery + items + packages，並處理 rollback。
+一次寫入 Delivery + items + packages，並處理 rollback。Response 結構建議回傳 `deliveryId`, `deliveryNo`, `itemIds`, `packageIds` 與 `warnings[]`（例如庫存不足）。  
+匯入包裹/序號亦可走背景 Job：`POST /api/delivery-notes/{id}/packages/import` → 回傳 `traceNo`，再透過 `GET /api/delivery-notes/import-jobs/{traceNo}` 查詢進度與錯誤。
 
 ## 3. Workflow
 
@@ -52,6 +53,18 @@ POST /api/delivery-notes/transactions
 - `DeliveryNotePackageResource`：`GET/POST/PUT/DELETE /api/delivery-note-packages`。  
 - `DeliveryNoteItemSerialResource`：記錄序號/批號。  
 - 若需 bulk 匯入序號，建議新增 `POST /api/delivery-notes/{id}/serials:bulk-upsert` 等端點；同理包裹提供 `POST /api/delivery-notes/{id}/packages/import`，欄位為 `packageNo,weight,carrier,trackingNo,skuNo,qty`。
+  - Bulk Response 範例：
+    ```json
+    {
+      "traceNo": "DLV-IMPORT-20251203-001",
+      "status": "COMPLETED",
+      "successCount": 15,
+      "failureCount": 2,
+      "errors": [
+        { "row": 7, "message": "delivery.import.invalidSku" }
+      ]
+    }
+    ```
 
 ## 5. Lookup
 

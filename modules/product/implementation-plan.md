@@ -28,6 +28,13 @@
 | PROD-13 | 實作工單拆解 | 依最終欄位/審批決策拆成後端/前端工單：Variant Generator、Transaction API、PriceList Workflow | ⏳ |
 | PROD-14 | Price Transaction QA | 擬定整單 transaction 測試案例（CRUD、審批、rollback） | ⏳ |
 
+### 近期討論紀錄（2025-12-03）
+
+- Transaction Payload 已與後端初步對齊：`item`, `variantDimensions`, `skus`, `prices` 四大節，皆需回傳 `id` 與 `version`。  
+- PriceList/ItemPrice 會採 `submit` 欄位決定是否觸發 workflow；若 `hasVariants`，生成的 SKU 須先進入 `DRAFT`。  
+- 後端建議先實作 `POST /api/products/transactions`，後續再擴充 `PUT`/`PATCH`。
+- 待辦：拆分 BE/FE 工單（PROD-12/13），並補上錯誤碼與 rollback 測試案例。
+
 ## 3. TODO / 風險
 
 - [ ] 確認 `item`, `item_sku`, `price_list`, `item_price` 的現況與遷移策略。

@@ -18,4 +18,11 @@
 | PRC-14 | Cache/Failover 策略 | 設計 Pricing 結果快取、fallback、熔斷 | TODO |
 | PRC-15 | Observability | Trace/Preview 的 log 及 APM 指標定義 | TODO |
 
+### 協調紀錄（2025-12-03）
+
+- Transaction API 與 Product 將共用 `prices[]` nodes，欄位：`priceListId`, `skuNo/skuId`, `unitPrice`, `currency`, `effectiveFrom`, `effectiveTo`, `discountType`, `submit`.  
+- 預計新增 `/api/item-prices/transactions` 以整批寫入並回傳 `errors[]` + `traceNo`。  
+- Import Job：採 async background job，`POST /item-prices/import` 回傳 `traceNo`，再以 `GET /item-prices/import-jobs/{traceNo}` 查狀態。  
+- Formula Editor/Trace Viewer 元件需先落板，與 Monaco 套件整合，並提供欄位插入面板。
+
 > 待開始開發時再補細節。

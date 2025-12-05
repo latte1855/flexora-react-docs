@@ -27,6 +27,8 @@
 | `GET /api/inventory-reservations` | 查詢 Reservation | TODO | filter: salesOrderId, projectId, status, dueDate |
 | `POST /api/inventory-reservations` | 建立保留 | TODO | 與 Sales Order 對應 |
 | `POST /api/inventory-reservations/{id}/release` | 釋放/調整 | TODO | 需紀錄歷史 |
+| `POST /api/inventory-reservations/bulk-release` | 批次釋放（含 traceNo） | 建議 | 供排程使用 |
+| `GET /api/inventory-reservations/jobs/{traceNo}` | 查詢釋放任務 | 建議 | 回傳成功/失敗筆數 |
 
 ## 4. Stock Count / Adjustment
 
@@ -35,6 +37,7 @@
 | `POST /api/stock-counts` | 建立盤點任務 | TODO | 包含任務明細、負責人 |
 | `POST /api/stock-counts/{id}/import` | 匯入盤點結果 | TODO | CSV/Excel |
 | `POST /api/stock-counts/{id}/submit` | 送審 / 產生 Adjustment | TODO | 需對接 Workflow |
+| `GET /api/stock-counts/{id}/diff` | 取得差異 | 建議 | 匯出報表 |
 
 ## 5. Replenishment / Task
 
@@ -50,6 +53,7 @@
 | --- | --- | --- | --- |
 | `GET /api/inventory-serials` | 查詢序號/批號 | TODO | 支援篩選 |
 | `POST /api/inventory-serials/import` | 匯入序號 | TODO | 供 Receipt/Adjustment 使用 |
+| `POST /api/inventory-serials/bulk-reserve` | 序號保留/釋放 | 建議 | 與 Delivery/Service 串接 |
 
 ## 7. Integration Endpoints
 
@@ -92,10 +96,33 @@
 }
 ```
 
+**Import/Job Response**
+```json
+{
+  "traceNo": "INV-IMPORT-20251203-001",
+  "submittedAt": "2025-12-03T09:15:00Z",
+  "status": "PROCESSING"
+}
+```
+
+`GET /api/inventory-import-jobs/{traceNo}`：
+```json
+{
+  "traceNo": "INV-IMPORT-20251203-001",
+  "status": "COMPLETED",
+  "successCount": 120,
+  "failureCount": 3,
+  "errors": [
+    { "row": 5, "message": "inventory.import.invalidSku" }
+  ]
+}
+```
+
 **驗證與排程**
 - `InventoryTransactionDTO`：`qty` 不可為 0；TRANSFER 需提供來源/目標倉庫；若帶 `serials` 需與 qty 相等；`referenceType` `referenceId` 用於稽核。
 - `InventoryReservationDTO`：`dueDate` 不可早於今日；`status` 允許 `ACTIVE/RELEASED/EXPIRED`；若關聯 Sales Order，後端需檢查行項庫存。
-- 排程：每日 Job 掃描 `InventoryReservation`，對 `dueDate < today` 的資料自動釋放並發送通知；補貨任務可用 Cron 計算 `qtyAvailable < minQty`。
+- 排程：每日 Job 掃描 `InventoryReservation`，對 `dueDate < today` 的資料自動釋放並發送通知；補貨任務可用 Cron 計算 `qtyAvailable < minQty`。  
+- 建議將 Job 狀態寫入 `inventory_job_log`，提供 `GET /api/inventory-jobs` 查詢歷史。
 
 ## TODO
 

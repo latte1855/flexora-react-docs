@@ -31,10 +31,21 @@
 4. **送達 / 結案**：可手動/自動更新為 DELIVERED。
 5. **取消 / 退貨**：若需作廢或退貨，更新狀態並回寫 Sales Order / Inventory。
 
+## 與其他模組整合
+
+| 模組 | 整合方式 |
+| --- | --- |
+| Sales Order | 從 SO 產生 Delivery、同步 shipped qty、更新 SO 狀態與 Timeline |
+| Inventory | 出貨觸發 `InventoryTransaction`(ISSUE)、維護序號/批號 |
+| Packaging / WMS | 若需外部包裝系統，可透過匯入包裹資訊或 Webhook 更新 tracking |
+| Billing / AR | Delivery 完成後可觸發 Invoice 或寄送對帳資料 |
+| Notification | 出貨/送達時發送 Email/SMS/Line，並在 Delivery Detail 顯示紀錄 |
+
 ## TODO
 
-- [ ] 匯入流程圖（狀態、事件）。  
-- [ ] 整理欄位清單與驗證（含包裝/重量/追蹤資料）。  
-- [ ] 描述與 WMS/物流服務的資料交換（API / EDI）。  
-- [ ] 規劃多階段出貨（部分出貨、多包裹）。  
-- [ ] 若需與 Billing 模組串接，補充 Invoice 流程描述。
+- [ ] 匯入流程圖（狀態、事件）與狀態圖，清楚標示 `PACKING → READY → SHIPPED → DELIVERED`。  
+- [ ] 整理欄位清單與驗證（包裝尺寸、重量、追蹤號、承運商）。  
+- [ ] 描述與 WMS/物流服務的資料交換（API / Webhook / EDI）。  
+- [ ] 規劃多階段出貨（部分行項出貨、多包裹、合併出貨）。  
+- [ ] 若需與 Billing 模組串接，補充 Invoice 流程與對帳欄位。  
+- [ ] 補充通知/報表需求（PDF、追蹤連結、客戶通知模板）。  

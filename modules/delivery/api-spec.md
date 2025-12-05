@@ -33,7 +33,8 @@ POST /api/delivery-notes/transactions
 }
 ```
 
-一次寫入 Delivery + items + packages，並處理 rollback。
+一次寫入 Delivery + items + packages，並處理 rollback。Response 結構建議回傳 `deliveryId`, `deliveryNo`, `itemIds`, `packageIds` 與 `warnings[]`（例如庫存不足）。  
+匯入包裹/序號亦可走背景 Job：`POST /api/delivery-notes/{id}/packages/import` → 回傳 `traceNo`，再透過 `GET /api/delivery-notes/import-jobs/{traceNo}` 查詢進度與錯誤。
 
 ## 3. Workflow
 
@@ -51,7 +52,19 @@ POST /api/delivery-notes/transactions
 
 - `DeliveryNotePackageResource`：`GET/POST/PUT/DELETE /api/delivery-note-packages`。  
 - `DeliveryNoteItemSerialResource`：記錄序號/批號。  
-- 若需 bulk 匯入序號，建議新增 `POST /api/delivery-notes/{id}/serials:bulk-upsert` 等端點。
+- 若需 bulk 匯入序號，建議新增 `POST /api/delivery-notes/{id}/serials:bulk-upsert` 等端點；同理包裹提供 `POST /api/delivery-notes/{id}/packages/import`，欄位為 `packageNo,weight,carrier,trackingNo,skuNo,qty`。
+  - Bulk Response 範例：
+    ```json
+    {
+      "traceNo": "DLV-IMPORT-20251203-001",
+      "status": "COMPLETED",
+      "successCount": 15,
+      "failureCount": 2,
+      "errors": [
+        { "row": 7, "message": "delivery.import.invalidSku" }
+      ]
+    }
+    ```
 
 ## 5. Lookup
 
@@ -72,5 +85,8 @@ GET /api/delivery-notes/lookup?keyword=DN-2025&salesOrderId=&status=&limit=20
 - [ ] 確認現有 Controller 是否已有 `ship`, `confirmDelivery` 等操作，若無需新增。  
 - [ ] 定義 Transaction API payload 與錯誤處理。  
 - [ ] Bulk 操作（序號匯入、包裝匯入）需求。  
-- [ ] 與 WMS/外部物流的同步接口（若有）。  
-- [ ] 若 Delivery 會產生 Invoice/成本，需記錄對應 API。
+- [ ] 與 WMS/外部物流的同步接口（Webhook / EDI）。  
+- [ ] 若 Delivery 會產生 Invoice/成本，需記錄對應 API。  
+- [ ] 通知 / 追蹤：定義物流事件回傳 API、重送策略、推播格式。  
+- [ ] 支援部分出貨 / 多次出貨：API 需傳回行項餘量並更新 SO 連動。  
+- [ ] 提供 `/api/delivery-notes/{id}/notifications` 查詢及 `POST /resend` 以記錄外部通知。

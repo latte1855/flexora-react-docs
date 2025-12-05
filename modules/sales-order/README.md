@@ -13,3 +13,5 @@
 
 - [`docs/flexora-salesorder-management-spec.md`](../../flexora-salesorder-management-spec.md)
 - 報價模組：`docs/modules/quotation/README.md`
+
+> **Pipeline**：SO 模組沿用報價 Pipeline 規則（`DRAFT → IN_REVIEW → APPROVED → FULFILLED`）。拖曳僅允許下一階狀態並需權限，`APPROVED` → `FULFILLED` 需確認 Delivery/Invoice 完成，取消 Pipeline 時請同步此檔與 UI spec。

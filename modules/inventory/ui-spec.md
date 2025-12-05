@@ -1,11 +1,102 @@
 # Inventory Module – UI Spec
 
-目前 UI 草案仍位於 Phase 3 資料夾：  
-[`docs/specs/phase3-inventory/ui-spec.md`](../../specs/phase3-inventory/ui-spec.md)
+> 以 Phase 3 UI 草稿為基礎，重新整理為 Hub + List + Detail + Drawer 風格。仍需在 Figma/Wireframe 中補畫面，這裡先列結構需求。
 
-內容涵蓋：
-- 庫存工作區、補貨監控、保留/釋放流程  
-- 倉庫/批次/試算報表畫面  
-- 與 IM/PO/SO 的串接
+## Workspace
 
-未來整理後會轉移至本檔。  
+```
+┌──────── Filter Hub ─────────┐┌──────── Inventory Workspace ───────┐
+│Preset：全部 / 低庫存 / 已保留   ││操作列：調整 / 轉移 / 新增盤點任務      │
+│Warehouse、Bin、SKU、Tag      ││Tabs：Balance / Reservation / Task │
+└─────────────────────────────┘│列表 + Detail Panel                │
+                              └────────────────────────────────────┘
+```
+
+- **Filter Hub**：預設條件（低於安全庫存、已保留、異常），進階篩選（倉庫、儲位、SKU、Lot/Serial、Owner）。搜尋支援 IME，必須按「套用」才送出 API，避免多次呼叫。
+- **主視圖**：
+  - `Balance` Tab：顯示 SKU + Warehouse + Qty On Hand / Reserved / Available。  
+  - `Reservation` Tab：列出被 Sales Order / Project 保留的紀錄，可釋放或轉移。  
+  - `Task` Tab：補貨任務、盤點任務。  
+- **操作列**：`建立調整單`（Drawer）、`轉移`、`盤點`、`補貨建議`。
+- **Wireframe 參考**：`https://figma.com/file/TBD/flexora-inventory?node-id=hub`（Balance/Reservation/Task 視圖、Drawer）。待設計上稿後貼入截圖。
+
+### Tabs 細節（ASCII）
+
+**Balance**
+```
+SKU | Warehouse | On Hand | Reserved | Available | Min/Max | Health
+P-100-RED-500 | WH-A | 120 | 40 | 80 | 50/200 | Healthy
+```
+
+**Reservation**
+```
+Resv No | 來源 (SO/Project) | Warehouse | Qty | DueDate | Status | 操作
+RSV-001 | SO-2025-0001-10   | WH-A      | 20  | 2025/01/15 | ACTIVE | [釋放][延長]
+```
+
+**Task**
+```
+Task No | 類型 (盤點/補貨) | Warehouse | Responsible | Status | Next Action
+TASK-020 | 補貨           | WH-B      | user03      | TODO   | [轉 PO]
+```
+可切換 Pipeline：`TODO → IN_PROGRESS → POSTED`，與報價 Pipeline 元件共用。
+
+## Detail Panel
+
+- **摘要卡**：SKU、Warehouse、On Hand、Reserved、Available、Cost。  
+- **Tabs**：
+  1. **Ledger**：依日期顯示交易紀錄（Receipt/Issue/Transfer/Adjustment），支援匯出。  
+  2. **Reservation**：列出 Reservation 來源（SO、Project），可釋放。  
+  3. **Lot / Serial**：顯示批號/序號與到期日。  
+  4. **Tasks**：補貨/盤點任務狀態。  
+  5. **Workflow / Timeline**（若盤點或補貨有審批）。  
+  6. **附件 / 備註**。
+
+## Drawer / 子 Drawer
+
+1. **Adjustment Drawer**：倉庫、SKU、調整數量、原因、附件。支援多行項與欄位驗證（Qty >0、原因必填）。  
+2. **Transfer Drawer**：來源/目的倉庫或儲位、行項、序號選取。  
+3. **Reservation Drawer**：建立或修改保留條件（來源單據、數量、到期日）。  
+4. **Stock Count Drawer**：盤點任務設定、套用儲位與負責人，並可匯入盤點結果。  
+5. **Replenishment Task Drawer**：顯示建議補貨數量、來源 Purchase / Manufacturing。
+
+### 匯入 / 掃碼流程
+
+1. 使用者點擊 `匯入 CSV` 或 `掃碼模式`。  
+2. Modal 顯示欄位說明與範本下載。  
+3. 上傳後進入預覽頁，顯示有效筆數與錯誤列（含行號、錯誤訊息 `inventory.import.invalidSku` 等）。  
+4. 按「套用」後觸發背景 Job，右上角通知顯示 `traceNo` 與進度，完成後可下載錯誤報告。
+
+CSV 欄位範例：
+
+| 類型 | 欄位 | 備註 |
+| --- | --- | --- |
+| Adjustment | `skuNo,warehouseCode,qty,reason,lot,serials` | qty 可正負，serials 用 `;` 分隔 |
+| Transfer | `skuNo,fromWarehouse,toWarehouse,qty,binFrom,binTo` | |
+| Stock Count | `skuNo,warehouseCode,binCode,countQty` | 用於盤點結果 |
+| Reservation | `salesOrderNo,lineNo,skuNo,warehouseCode,qty,dueDate` | 產生/更新保留 |
+
+掃碼模式：側邊面板顯示掃描結果，支援單件/批次模式、連續掃描與手動輸入。
+
+## Dashboard / Report
+
+- 補貨監控卡片：列出需補貨 SKU，提供「產生採購單」快捷。  
+- 保留概覽：顯示即將到期的保留、釋放提示。  
+- 倉庫容量 / Turnover 報表（可連結至 BI）。
+
+## 通知 / 報表
+
+- 補貨監控卡片：列出需補貨 SKU，提供「產生採購單」快捷。  
+- 保留概覽：顯示即將到期的保留、釋放提示。  
+- 倉庫容量 / Turnover 報表（可連結至 BI）。  
+- 盤點報表：可匯出差異、提供 PDF。  
+- 通知介面需顯示訊息紀錄（系統提醒、Webhook 回饋）。
+
+## TODO
+
+- [ ] 置入實際 wireframe（Balance 列表、Drawer、Detail Panel），含行距與欄寬。  
+- [ ] 補欄位與驗證（序號輸入、重量、儲位格式、日期）。  
+- [ ] 探討 Pipeline 是否適用於任務（如補貨/盤點），若取消需在 README 備註。  
+- [ ] 定義匯入/掃碼流程 UI（盤點、序號、調整）。  
+- [ ] 與 Delivery / Purchase / Manufacturing 的跳轉或子 Drawer 行為。  
+- [ ] 審批或通知的 UI（例如補貨審批、盤點審核）。  

@@ -38,6 +38,29 @@
 4. 產生 Delivery Note、Invoice：透過 Link API / Buttons。
 5. 完成 / 取消：更新狀態，寫入歷史。
 
+### Pipeline / Workflow 規則
+
+| 狀態 | 編碼 | 說明 | 允許拖曳 | 備註 |
+| --- | --- | --- | --- | --- |
+| 草稿 | DRAFT | 草稿階段 | IN_REVIEW | 客戶/行項必填 |
+| 審核中 | IN_REVIEW | 等待審批 | APPROVED | 需 Workflow 權限 |
+| 已核准 | APPROVED | 允許出貨 | FULFILLED | 需至少一筆 Delivery |
+| 已出貨 | FULFILLED | Delivery 完成 | CLOSED | 僅 admin 可結案 |
+| 已結案 | CLOSED | SO 結束 | — | — |
+| 已取消 | CANCELLED | 中止 | — | 保留歷史 |
+
+規則：只允許往下一階段拖曳；若 PM 停用 Pipeline，需在 README 記錄改為 List 單視圖。
+
+## 與其他模組整合
+
+| 模組 | 整合方式 |
+| --- | --- |
+| Quotation | 從 Quote 轉 SO（保留 Thread / Revision），同步狀態回報；可顯示來源版本 | 
+| Delivery | 由 SO 產生 Delivery Note，推播剩餘可出貨數；Delivery 狀態回寫 SO | 
+| Inventory | 依 SO Reservation 策略鎖定庫存或檢查可用量；取消時釋放 | 
+| Invoice / Billing | 跟催開立 Invoice、紀錄收款進度；SO Detail 顯示對應 Invoice | 
+| Activity / CRM | 在 Customer/Opportunity Detail 中顯示 SO 連結與狀態 | 
+
 ## Workflow / Timeline
 
 - 事件定義：`SalesOrderEventDefResource`（E.g., SUBMIT, APPROVE, CANCEL）。
@@ -50,4 +73,7 @@
 - [ ] 匯入現有流程圖、狀態圖。
 - [ ] 完整欄位清單（含 Ext Attr、付款條件、物流資訊）。
 - [ ] 梳理 SO ↔ Quote Link 流程（多版本、異動）。
-- [ ] 描述與 Delivery/Invoice 的資料同步與異常處理（例如 Delivery 取消時回寫 SO）。
+- [ ] 描述與 Delivery/Invoice 的資料同步與異常處理（例如 Delivery 取消時回寫 SO）。  
+- [ ] 補充與 Inventory Reservation、Pricing（PriceList）互動的欄位與 API。  
+- [ ] 若需匯入/批次更新交期或行項，提供欄位與錯誤處理規格。  
+- [ ] Pipeline 表需在 UI/API 同步；若取消 Pipeline 需更新 README。  

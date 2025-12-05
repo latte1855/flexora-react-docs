@@ -17,10 +17,30 @@
 
 ### ERD（摘要）
 
-- `ItemGroup (1) ── (n) Item`
-- `Item (1) ── (n) ItemSku`
-- `ItemSku (1) ── (n) ItemPrice`
-- `PriceList (1) ── (n) ItemPrice`
+```
+ ItemGroup
+     │
+     ├─< Item
+     │     ├─ hasVariants? ──> VariantDimension ─< VariantValue
+     │     └─< ItemSku
+     │             └─< ItemPrice >─ PriceList
+```
+
+- Mermaid 版（後續可匯出圖檔）：
+
+```mermaid
+erDiagram
+    ItemGroup ||--o{ Item : contains
+    Item ||--o{ ItemSku : has
+    Item ||--o{ VariantDimension : defines
+    VariantDimension ||--o{ VariantValue : values
+    ItemSku ||--o{ ItemPrice : pricedBy
+    PriceList ||--o{ ItemPrice : owns
+```
+
+- `ItemGroup (1) ── (n) Item`：產品線與共用屬性，同時提供預設稅別與 Ext Attr。
+- `Item (1) ── (n) ItemSku`：Item 可決定是否 `hasVariants`，若為 true 則透過 `VariantDimension/VariantValue` 產生多組 SKU。
+- `ItemSku (1) ── (n) ItemPrice` 與 `PriceList (1) ── (n) ItemPrice`：一個 SKU 可存在多個價目表。
 - `PriceList` 可對應多個客戶群／通路條件；若未來獨立模組則透過 API 提供建議價。
 
 欄位參考（依現有 entity）：
@@ -33,22 +53,92 @@
 
 ## 關聯模組
 
-- **Quotation**：建立/編輯報價時需 Async Select SKU、帶入 PriceList 建議價。
-- **Inventory**：SKU 與倉庫、批次、MOQ 整合。
-- **Procurement / Sales Order**：沿用 SKU 與價目表邏輯。
-- **Reporting**：ItemGroup 與 PriceList 是報表分析的基本條件。
+| 模組 | 整合說明 |
+| --- | --- |
+| Quotation / Sales Order | Async Select SKU、顯示 PriceList 建議價、Variant 標識 |
+| Inventory | 共享 UoM、倉庫、批號屬性；SKU Drawer 需顯示預設倉庫與序號策略 |
+| Procurement | Rfq / PO 行項引用 SKU 資料；Variant 資訊需同步 |
+| Pricing | PriceRule/PriceList 與 SKU 的權限、審批聯動 |
+| Delivery | 若 SKU 需序號，Product 需提供標記以驅動倉儲流程 |
 
 ## 操作流程（摘要）
 
 1. **建立 Item**  
    - 選 ItemGroup → 填主檔欄位 → 指定是否 `hasVariants`。  
-   - 若 `hasVariants=true`，需設定 Variant 維度（如顏色、容量）並由系統產生多個 SKU。
+   - 若 `hasVariants=true`，需設定 Variant 維度（如顏色、容量）並由系統產生多個 SKU。  
+     ```
+     草稿 Item
+        ↓ 選擇 VariantDimension (Color / Size…)
+        ↓ 指定 VariantValue（紅 / 藍、S / M）
+        ↓ 預覽 SKU 組合（可剔除）
+        ↓ 產生 SKU → 進入 SKU 表格
+     ```
 2. **維護 ItemSKU**  
    - 以表格呈現，搭配 Drawer 調整 UoM、稅別、條碼、狀態。  
    - 可複製 SKU 或由 Variant Generator 批次產生。
 3. **設定 PriceList / ItemPrice**  
    - 在 SKU Drawer 顯示「各價目表建議價」，可跳轉到 PriceList 模組完整編輯。  
    - 支援匯入或同步 ERP 的價目資料。
+
+### Variant / PriceList Wireframe（參考）
+
+```
+Variant Generator
+┌───────────────────────────────┐
+│ Step 1: 維度 (Color / Size)   │
+│ Step 2: 值   [Red][Blue]      │
+│ Step 3: 預覽表                │
+│ ┌───────────────┐ ┌───────┐ │
+│ │SKU 組合        │ │勾選  │ │
+│ └───────────────┘ └───────┘ │
+│ [產生 SKU] [取消]            │
+└───────────────────────────────┘
+
+PriceList 摘要 (SKU Drawer 內)
+┌────────────┬─────────┬─────┬────────────┐
+│PriceList   │建議價   │幣別 │有效期       │
+├────────────┼─────────┼─────┼────────────┤
+│WEB 一般    │450      │TWD  │2025/01~     │
+│VIP 通路    │430      │TWD  │2025/02~     │
+└────────────┴─────────┴─────┴────────────┘
+```
+
+## Transaction API（草案）
+
+- Endpoint：`POST /api/products/transactions`
+- Payload：
+```json
+{
+  "item": { "id": null, "itemGroupId": 10, "code": "P-100", "name": "水瓶", "hasVariants": true },
+  "variantDimensions": [
+    { "name": "Color", "values": ["Red","Blue"] },
+    { "name": "Size", "values": ["500ml","750ml"] }
+  ],
+  "skus": [
+    { "id": null, "skuNo": "P-100-RED-500", "uomId": 1, "taxCode": "VAT", "defaultWarehouseId": 1 }
+  ],
+  "prices": [
+    { "priceListId": 2, "skuNo": "P-100-RED-500", "unitPrice": "450.00", "effectiveFrom": "2025-01-01" }
+  ]
+}
+```
+- 後端需對 `item`, `variant`, `sku`, `itemPrice` 進行整批驗證並落地，並回傳各資源的 `id` 與 `version`。
+- 若 PriceList 需審批，可在 payload 加上 `submit=true` 由服務端決定是否觸發 workflow。
+
+### 後端欄位與驗證（對照現有 entity）
+
+| 項目 | 驗證 / 說明 |
+| --- | --- |
+| Item | `code` 必須唯一、僅允許 A-Z0-9-；`hasVariants=true` 時必須提供至少 1 個 `VariantDimension`。 |
+| VariantDimension | 名稱 40 字限制；`values` 不可重複；移除維度會讓既有 SKU 轉回 `IN_REVIEW`。 |
+| ItemSku | `skuNo` 唯一；`uomId`, `taxCode`, `defaultWarehouseId` 需存在；可選 `barcode`（多值）。 |
+| ItemPrice | `effectiveFrom` 若為 null 則立即生效；`effectiveTo` 需大於 start；`discountType` 限定 ENUM(`NONE`,`PERCENT`,`AMOUNT`)。 |
+| Workflow | Item 初始 `DRAFT` → `IN_REVIEW` → `ACTIVE/RETIRED`； PriceList 送審時 `submit` API 建立 `PriceListTask`，審批後更新 `status`。 |
+
+Variant / Price 流程建議：  
+1. `hasVariants=false`：Item 保存後可直接啟用 SKU。  
+2. `hasVariants=true`：Variant 變動時自動建立審批任務，未核准前 SKU 保持 `DRAFT`。  
+3. PriceList 調整若需管理審批，`itemPrice` 更新回傳 `approvalState`，前端顯示待審提示。
 
 ## 審批 / 權限 / Versioning
 
@@ -72,13 +162,7 @@
 - [ ] 完整化 ItemPrice 版本控制、幣別與稅別政策，以及權限矩陣。
 - [ ] 與 Inventory / Quotation / Procurement 的資料契約、Async Select API。
 - [ ] Variant Generator / 匯入流程與 CSV 欄位定義。
-
-## TODO
-
-- [ ] 補齊 ERD 與欄位說明。
-- [ ] 定義 Product 與 Item SKU 的建立/啟用流程。
-- [ ] 規範 Pricebook 與 ItemPrice 版本控制。
-- [ ] 與 Inventory / Quotation 模組的資料交換契約。
+- [ ] 製作 Variant / PriceList 流程圖與 wireframe（含 Figma 連結）。
 
 > 本檔暫存為骨架，待後續規劃時依模組需求更新。  
 > 若已有相關資料，請在此連結或引用以避免資訊分散。

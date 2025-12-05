@@ -109,6 +109,21 @@ erDiagram
 - 後端需對 `item`, `variant`, `sku`, `itemPrice` 進行整批驗證並落地，並回傳各資源的 `id` 與 `version`。
 - 若 PriceList 需審批，可在 payload 加上 `submit=true` 由服務端決定是否觸發 workflow。
 
+### 後端欄位與驗證（對照現有 entity）
+
+| 項目 | 驗證 / 說明 |
+| --- | --- |
+| Item | `code` 必須唯一、僅允許 A-Z0-9-；`hasVariants=true` 時必須提供至少 1 個 `VariantDimension`。 |
+| VariantDimension | 名稱 40 字限制；`values` 不可重複；移除維度會讓既有 SKU 轉回 `IN_REVIEW`。 |
+| ItemSku | `skuNo` 唯一；`uomId`, `taxCode`, `defaultWarehouseId` 需存在；可選 `barcode`（多值）。 |
+| ItemPrice | `effectiveFrom` 若為 null 則立即生效；`effectiveTo` 需大於 start；`discountType` 限定 ENUM(`NONE`,`PERCENT`,`AMOUNT`)。 |
+| Workflow | Item 初始 `DRAFT` → `IN_REVIEW` → `ACTIVE/RETIRED`； PriceList 送審時 `submit` API 建立 `PriceListTask`，審批後更新 `status`。 |
+
+Variant / Price 流程建議：  
+1. `hasVariants=false`：Item 保存後可直接啟用 SKU。  
+2. `hasVariants=true`：Variant 變動時自動建立審批任務，未核准前 SKU 保持 `DRAFT`。  
+3. PriceList 調整若需管理審批，`itemPrice` 更新回傳 `approvalState`，前端顯示待審提示。
+
 ## 審批 / 權限 / Versioning
 
 - **角色**：產品管理（編輯 Item/SKU）、行銷定價（管理 PriceList/ItemPrice）、營運/審批者（核准上架或價格）。  

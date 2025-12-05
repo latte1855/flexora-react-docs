@@ -51,7 +51,7 @@ POST /api/delivery-notes/transactions
 
 - `DeliveryNotePackageResource`：`GET/POST/PUT/DELETE /api/delivery-note-packages`。  
 - `DeliveryNoteItemSerialResource`：記錄序號/批號。  
-- 若需 bulk 匯入序號，建議新增 `POST /api/delivery-notes/{id}/serials:bulk-upsert` 等端點。
+- 若需 bulk 匯入序號，建議新增 `POST /api/delivery-notes/{id}/serials:bulk-upsert` 等端點；同理包裹提供 `POST /api/delivery-notes/{id}/packages/import`，欄位為 `packageNo,weight,carrier,trackingNo,skuNo,qty`。
 
 ## 5. Lookup
 
@@ -76,3 +76,4 @@ GET /api/delivery-notes/lookup?keyword=DN-2025&salesOrderId=&status=&limit=20
 - [ ] 若 Delivery 會產生 Invoice/成本，需記錄對應 API。  
 - [ ] 通知 / 追蹤：定義物流事件回傳 API、重送策略、推播格式。  
 - [ ] 支援部分出貨 / 多次出貨：API 需傳回行項餘量並更新 SO 連動。  
+- [ ] 提供 `/api/delivery-notes/{id}/notifications` 查詢及 `POST /resend` 以記錄外部通知。

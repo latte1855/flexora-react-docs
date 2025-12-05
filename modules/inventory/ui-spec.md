@@ -18,6 +18,7 @@
   - `Reservation` Tab：列出被 Sales Order / Project 保留的紀錄，可釋放或轉移。  
   - `Task` Tab：補貨任務、盤點任務。  
 - **操作列**：`建立調整單`（Drawer）、`轉移`、`盤點`、`補貨建議`。
+- **Wireframe 參考**：`https://figma.com/file/TBD/flexora-inventory?node-id=hub`（Balance/Reservation/Task 視圖、Drawer）。待設計上稿後貼入截圖。
 
 ## Detail Panel
 

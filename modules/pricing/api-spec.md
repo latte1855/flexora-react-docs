@@ -40,9 +40,10 @@
 | PATCH | `/api/price-lists/{id}` | 更新（幣別、channel、有效期） | ✅ |
 | POST | `/api/price-lists/{id}/submit` | 送審（若啟用 workflow） | ⛔ |
 | POST | `/api/price-lists/{id}/approve` | 審批/退回 | ⛔ |
+| GET | `/api/price-lists/{id}/history` | workflow 歷史/評論 | ⛔ |
 | GET | `/api/item-prices` | 依價目表、SKU 查詢價格 | ✅ |
 | POST | `/api/item-prices` | 建立/更新 SKU 價格（支援整批 lines） | ⛔ |
-| POST | `/api/item-prices/import` | 匯入（CSV/XLSX） | ⛔ |
+| POST | `/api/item-prices/import` | 匯入（CSV/XLSX） | ⛔（建議導入背景 Job，回傳 traceNo） |
 | GET | `/api/item-prices/export` | 匯出目前價格 | ⛔ |
 
 **Transaction payload 建議**
@@ -61,6 +62,8 @@ priceListCode,skuNo,unitPrice,discountType,effectiveFrom,effectiveTo,currency
 WEB-2025,P-100-RED-500,450,PERCENT,2025-01-01,,TWD
 ```
 - `/import` 回傳 `{"traceNo":"PRC-IMPORT-001","errors":[{"row":3,"message":"pricing.error.invalidSku"}]}`。  
+- `/import` 回傳 `{"traceNo":"PRC-IMPORT-001","errors":[{"row":3,"message":"pricing.error.invalidSku"}]}`。  
+- 匯入完成後可透過 `GET /api/item-prices/import-jobs/{traceNo}` 查詢狀態。  
 - `/export` 支援 filter：`priceListId`, `skuNo`, `onlyActive`。  
 - 若啟用審批，可在 payload 加上 `submit=true` 由服務端決定是否觸發 workflow。
 

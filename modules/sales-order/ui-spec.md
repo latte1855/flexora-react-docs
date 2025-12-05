@@ -14,7 +14,7 @@
 └────────────────────────────┘
 ```
 
-- **Filter Hub**：提供 Preset + 進階篩選（關鍵字、客戶、Owner、狀態、交期區間、PriceList、是否有出貨）。搜尋欄位採「輸入後按 Enter/套用才觸發」，避免每個字都打 API。
+- **Filter Hub**：提供 Preset + 進階篩選（關鍵字、客戶、Owner、狀態、交期區間、PriceList、是否有出貨）。搜尋欄位採「輸入後按 Enter/套用才觸發」，避免每個字都打 API；若關閉 Pipeline，需在 README 註明僅使用 List。 
 - **List View**：欄位包含 SO 編號、客戶、狀態、交期、金額、Owner。Row 點擊展開右側 Detail。
 - **Pipeline View**（可選）：若要追蹤 `DRAFT → IN_REVIEW → APPROVED → FULFILLED`，可與報價的 Pipeline 元件共用；若 PM 決議停用，需在 README 標記只使用 List。
 

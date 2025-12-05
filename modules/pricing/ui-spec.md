@@ -21,7 +21,9 @@
 2. **適用條件**：客戶群、通路、PriceList、ItemGroup、日期，支援多選與 `AND/OR`。  
 3. **計算方式**：固定價、百分比折扣、公式（包含欄位）。  
    - 公式編輯器提供語法提示與驗證（例如 `price * 0.95`）。  
-   - UI：Monaco-like code editor + 資料欄位清單；錯誤時在下方顯示 `line/column` 與 i18n 訊息。
+   - UI：Monaco-like code editor + 資料欄位清單；錯誤時在下方顯示 `line/column` 與 i18n 訊息。  
+   - 欄位清單包含：`basePrice`, `unitCost`, `qty`, `customerLevel`, `currencyRate`，點選即可插入程式碼。  
+   - 支援 Snippet（固定折扣、成本加成），並顯示最近測試結果。
 4. **審批**（若有）：顯示審批狀態與按鈕。  
 5. **Ext Attr / 註解**。
 6. **Trace 預覽**：輸入 SKU + Qty + 客戶後，顯示僅此規則計算結果，方便驗證。
@@ -37,7 +39,8 @@
 
 - 輸入欄位：SKU、Qty、Customer、PriceList、Channel。  
 - 顯示結果：建議價、折扣細節、命中規則列表（含優先順序）。  
-- Trace Viewer：類似樹狀/表格，顯示每個規則的條件、是否命中、計算結果。高亮目前命中的規則。
+- Trace Viewer：類似樹狀/表格，顯示每個規則的條件、是否命中、計算結果。高亮目前命中的規則，並提供展開/摺疊。  
+- Viewer 需提供「顯示原始 JSON」按鈕，方便開發調試。
 - Wireframe：`https://figma.com/file/TBD/pricing-trace?node-id=trace-viewer`。
 - 支援「儲存 Trace」與「分享 Link」，可供報價/產品人員檢視。  
 - 當試算失敗時，在右側顯示錯誤資訊（如缺價目表、規則衝突）。

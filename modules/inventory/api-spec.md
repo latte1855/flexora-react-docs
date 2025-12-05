@@ -92,6 +92,11 @@
 }
 ```
 
+**驗證與排程**
+- `InventoryTransactionDTO`：`qty` 不可為 0；TRANSFER 需提供來源/目標倉庫；若帶 `serials` 需與 qty 相等；`referenceType` `referenceId` 用於稽核。
+- `InventoryReservationDTO`：`dueDate` 不可早於今日；`status` 允許 `ACTIVE/RELEASED/EXPIRED`；若關聯 Sales Order，後端需檢查行項庫存。
+- 排程：每日 Job 掃描 `InventoryReservation`，對 `dueDate < today` 的資料自動釋放並發送通知；補貨任務可用 Cron 計算 `qtyAvailable < minQty`。
+
 ## TODO
 
 - [ ] 將既有 Phase3 Controller 與新需求對照，整理實際 route。  

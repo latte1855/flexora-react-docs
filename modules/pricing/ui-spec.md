@@ -16,6 +16,7 @@
 3. **計算方式**：固定價、百分比折扣、公式（包含欄位）。  
 4. **審批**（若有）：顯示審批狀態與按鈕。  
 5. **Ext Attr / 註解**。
+6. **Trace 預覽**：輸入 SKU + Qty + 客戶後，顯示僅此規則計算結果，方便驗證。
 
 ## PriceList Assignment
 
@@ -28,6 +29,8 @@
 - 輸入欄位：SKU、Qty、Customer、PriceList、Channel。  
 - 顯示結果：建議價、折扣細節、命中規則列表（含優先順序）。  
 - Trace Viewer：類似樹狀/表格，顯示每個規則的條件、是否命中、計算結果。
+- 支援「儲存 Trace」與「分享 Link」，可供報價/產品人員檢視。  
+- 當試算失敗時，在右側顯示錯誤資訊（如缺價目表、規則衝突）。
 
 ## TODO
 
@@ -36,3 +39,4 @@
 - [ ] 決定優先順序調整的 UI（拖拉 or 數字）。  
 - [ ] Pricing Trace 的視覺化呈現（例如 step log）。  
 - [ ] PriceList Assignment 的匯入/匯出流程。
+- [ ] 研究與報價 Drawer 的 Trace 彈窗是否共用。  

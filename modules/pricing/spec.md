@@ -11,6 +11,8 @@
 | PriceList Assignment | 管理價目表與客戶/通路/Region 的關係 |
 | Pricing Engine | `PricingResource` 提供試算/即時計價 |
 | Trace / Debug | `PriceCalcTraceResource` 顯示命中規則與計算過程 |
+| PriceList / ItemPrice | 價目表主檔、SKU 價格、有效期間與審批 |
+| Integration | 與 Quotation / Sales Order / Product 的資料交換 |
 
 ## PriceRule 資料摘要
 
@@ -42,3 +44,5 @@ Input: skuId, quantity, customerId, priceListId, channel
 - [ ] 審批需求：若 PriceRule 調整需要審批，定義狀態/事件。  
 - [ ] 記錄 Trace/Debug 所需欄位與存放時程。  
 - [ ] 若 PricingEngine 需支援批量試算、排程同步，補充說明。
+- [ ] PriceList 與 Product Transaction API 的同步策略（例：同時更新 SKU 與價格）。  
+- [ ] 權限 / 角色矩陣：誰可以建立規則、調整優先順序、審批價目。  

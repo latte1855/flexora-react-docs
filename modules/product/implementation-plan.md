@@ -24,7 +24,8 @@
 | PROD-09 | Product Transaction API | 規劃整單儲存 payload（Item + Variant + SKU + ItemPrice） | ⏳ |
 | PROD-10 | PriceList 審批/歷史 | 若啟用 workflow，新增 `submit/approve/history` 端點 | ⏳ |
 | PROD-11 | Variant/PriceList Wireframe | 產出 Hub/Drawer/Variant Figma；與 UI Spec 同步 | ⏳ |
-| PROD-12 | 後端欄位驗證協作 | 與後端確認 Transaction API 欄位、Variant/Price 審批策略 | ⏳ |
+| PROD-12 | API 欄位/審批協作 | 與後端確認 Transaction API 欄位與 Variant/Price 審批策略 | ⏳ |
+| PROD-13 | 實作工單拆解 | 依最終欄位/審批決策拆成後端/前端工單：Variant Generator、Transaction API、PriceList Workflow | ⏳ |
 
 ## 3. TODO / 風險
 

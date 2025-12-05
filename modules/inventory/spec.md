@@ -54,6 +54,29 @@ SerialNumber / Lot ──< InventoryTransaction
 - **調整 / 轉移掃碼**：Adjustment/Transfer Drawer 在行項下方提供「掃描模式」，允許使用條碼槍輸入 SKU 或 Serial；若掃描序號不存在則顯示 `inventory.serialMismatch`。
 - **通知面板**：Workspace 右上角顯示補貨、盤點、保留到期提醒；引用 Notification 模組 API，點擊後可直接開啟相關 Drawer。
 
+### ASCII Wireframe（Balance / Reservation / Task）
+
+```
+[Filter Hub 260px] | [Balance List] | [Detail Panel]
+Filter 包含：Warehouse、Bin、SKU、Lot、Tag
+Balance List 欄位：SKU / Warehouse / OnHand / Reserved / Available / Cost
+
+Reservation Tab
+┌──── Reservation List ────┐
+│SO-No │ Warehouse │ Qty    │ Due │
+└──────────────────────────┘
+
+Task Tab
+┌──── Replenish / Count ───┐
+│Task  Status  Owner  Due  │
+└──────────────────────────┘
+```
+
+### 排程 / Job
+
+- **Reservation Release Job**：每日 00:10 執行，尋找 `dueDate < today` 且 `status=ACTIVE` 的 Reservation，改為 `EXPIRED` 並釋放 qty，同時寫入通知。
+- **Replenishment Job**：每小時計算 `qtyAvailable + qtyOnPO < minQty` 的 SKU，建立 `ReplenishmentTask` 並寄送提醒。
+
 ## TODO / 待補內容
 
 - [ ] 詳細欄位定義（含 UoM、成本、序號）與驗證規則。  

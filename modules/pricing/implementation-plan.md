@@ -11,8 +11,9 @@
 | PRC-07 | 與 Quotation / SO 整合 | 規劃報價/訂單呼叫 Pricing Preview、失敗提示、cache 策略 | TODO |
 | PRC-08 | 權限 / 審批 | 定義角色、狀態、Workflow API、審批通知 | TODO |
 | PRC-09 | Trace 儲存策略 / Log | 決定 Trace 保存期限、查詢 API、清理排程 | TODO |
-| PRC-10 | Formula Editor / Trace UI | 與設計合作產出 Figma、實作 Monaco + Trace Viewer | TODO |
+| PRC-10 | Formula Editor / Trace UI | ASCII/Wireframe 完成後實作 Monaco + Trace Viewer 元件 | TODO |
 | PRC-11 | ItemPrice 匯入/匯出 | 設計 CSV 模板、錯誤回報、背景 Job API | TODO |
-| PRC-12 | 測試計畫 | PricingEngine 單元測試、整合測試、回歸腳本 | TODO |
+| PRC-12 | PriceList Workflow API | `submit/approve/history` 實作，與通知整合 | TODO |
+| PRC-13 | 測試計畫 | PricingEngine 單元測試、整合測試、回歸腳本 | TODO |
 
 > 待開始開發時再補細節。

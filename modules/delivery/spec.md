@@ -53,6 +53,22 @@ DRAFT → PACKING → READY_TO_SHIP → SHIPPED → DELIVERED
 - **外部 WMS 匯入**：支援 `POST /api/deliveries/{id}/packages/import`，欄位包含 `packageNo,weight,carrier,trackingNo,skuNo,qty`。
 - **通知流程**：`READY_TO_SHIP` 時可選擇是否寄送提醒；`SHIPPED` 自動觸發 Email/SMS（模板記錄於 Notification 模組），Detail Panel 顯示已寄送紀錄與再次寄送按鈕。
 
+### ASCII Wireframe（Package / Serial Drawer）
+
+```
+Package Drawer
+┌─────────────┬───────────────┐
+│Package No   │ PCK-001       │
+│Carrier      │ DHL           │
+│Tracking No  │ 123456789     │
+│Weight/Dim   │ 2.5kg / 30cm  │
+│Contents     │ SKU/Qty 表格  │
+├─────────────┴───────────────┤
+│Serial/Lot 掃描區             │
+│[Scan Serial] [Import CSV]    │
+└─────────────────────────────┘
+```
+
 ## TODO
 
 - [ ] 匯入流程圖（狀態、事件）與狀態圖，清楚標示 `PACKING → READY → SHIPPED → DELIVERED`。  

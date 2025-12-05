@@ -67,4 +67,5 @@
 - [ ] Pipeline 模式需求確認（例如新品導入流程）；若取消需更新 README。
 - [ ] PriceList 子 Drawer / 全頁畫面細部欄位（含匯入流程）。
 - [ ] Variant Generator 的錯誤處理（重複 SKU、缺維度值）。
-- [ ] 與報價、庫存共用的 Async Select 元件在畫面中的置入示例。
+- [ ] 與報價、庫存共用的 Async Select 元件在畫面中的置入示例。  
+- [ ] 提供 PriceList 缺漏提示的 wireframe（例如 Detail Panel 的提醒）。  

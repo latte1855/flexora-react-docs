@@ -33,10 +33,13 @@
 
 ## 關聯模組
 
-- **Quotation**：建立/編輯報價時需 Async Select SKU、帶入 PriceList 建議價。
-- **Inventory**：SKU 與倉庫、批次、MOQ 整合。
-- **Procurement / Sales Order**：沿用 SKU 與價目表邏輯。
-- **Reporting**：ItemGroup 與 PriceList 是報表分析的基本條件。
+| 模組 | 整合說明 |
+| --- | --- |
+| Quotation / Sales Order | Async Select SKU、顯示 PriceList 建議價、Variant 標識 |
+| Inventory | 共享 UoM、倉庫、批號屬性；SKU Drawer 需顯示預設倉庫與序號策略 |
+| Procurement | Rfq / PO 行項引用 SKU 資料；Variant 資訊需同步 |
+| Pricing | PriceRule/PriceList 與 SKU 的權限、審批聯動 |
+| Delivery | 若 SKU 需序號，Product 需提供標記以驅動倉儲流程 |
 
 ## 操作流程（摘要）
 
@@ -79,6 +82,8 @@
 - [ ] 定義 Product 與 Item SKU 的建立/啟用流程。
 - [ ] 規範 Pricebook 與 ItemPrice 版本控制。
 - [ ] 與 Inventory / Quotation 模組的資料交換契約。
+- [ ] 製作 Variant / PriceList 流程圖與 wireframe。  
+- [ ] 決定 PriceList 是否獨立模組，若是需描述同步策略。
 
 > 本檔暫存為骨架，待後續規劃時依模組需求更新。  
 > 若已有相關資料，請在此連結或引用以避免資訊分散。

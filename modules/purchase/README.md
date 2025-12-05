@@ -5,10 +5,10 @@
 
 | 文件 | 說明 |
 | --- | --- |
-| [spec.md](./spec.md) | 功能 / 流程 / 狀態定義 |
-| [ui-spec.md](./ui-spec.md) | 採購工作區、PO / 收貨 Drawer |
-| [api-spec.md](./api-spec.md) | REST / Workflow / Command API 草案 |
-| [implementation-plan.md](./implementation-plan.md) | 任務拆解與進度 |
+| [spec.md](./spec.md) | 功能 / 流程 / 狀態定義（RFQ → PO → Receipt/Return） |
+| [ui-spec.md](./ui-spec.md) | 採購 Workspace、PO / Receipt Drawer、Workflow 操作 |
+| [api-spec.md](./api-spec.md) | Rfq/Quote/PO/Receipt/Return REST 與 Transaction API 草案 |
+| [implementation-plan.md](./implementation-plan.md) | 任務拆解與進度（Workspace、Drawer、整合等） |
 
 相關舊文件：
 

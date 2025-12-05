@@ -13,3 +13,5 @@
 
 - [`docs/flexora-salesorder-management-spec.md`](../../flexora-salesorder-management-spec.md)
 - 報價模組：`docs/modules/quotation/README.md`
+
+> **Pipeline 決議**：是否沿用 Pipeline 視圖仍待 PM 確認。若最終僅保留 List/Detail，請在 `ui-spec` 及此 README 註記；若採 Pipeline，需定義狀態順序、拖拉權限與通知行為。

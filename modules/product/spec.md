@@ -82,10 +82,26 @@ erDiagram
 
 ### Variant / PriceList Wireframe（參考）
 
-- Variant Generator：`figma.com/file/<TBD>/flexora-product?node-id=variant`（TODO：由設計補上）
-  - Stepper：VariantDimension → VariantValue → 預覽 SKU → 產生。
-- PriceList / ItemPrice：`figma.com/file/<TBD>?node-id=pricelist`  
-  - SKU Drawer 內嵌 PriceList 表格、顯示建議價差異。
+```
+Variant Generator
+┌───────────────────────────────┐
+│ Step 1: 維度 (Color / Size)   │
+│ Step 2: 值   [Red][Blue]      │
+│ Step 3: 預覽表                │
+│ ┌───────────────┐ ┌───────┐ │
+│ │SKU 組合        │ │勾選  │ │
+│ └───────────────┘ └───────┘ │
+│ [產生 SKU] [取消]            │
+└───────────────────────────────┘
+
+PriceList 摘要 (SKU Drawer 內)
+┌────────────┬─────────┬─────┬────────────┐
+│PriceList   │建議價   │幣別 │有效期       │
+├────────────┼─────────┼─────┼────────────┤
+│WEB 一般    │450      │TWD  │2025/01~     │
+│VIP 通路    │430      │TWD  │2025/02~     │
+└────────────┴─────────┴─────┴────────────┘
+```
 
 ## Transaction API（草案）
 

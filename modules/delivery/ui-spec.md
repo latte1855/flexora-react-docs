@@ -15,6 +15,13 @@
 - **Filter Hub**：提供預設條件與進階篩選（SalesOrder、Warehouse、狀態、日期、承運商）。  
 - **視圖**：列表為預設；若需要以狀態卡片顯示（Packing → Ready → Shipped）則啟用 Pipeline。  
 - **操作列**：黑底 `建立出貨單`（滿版）、次要 `快速建立` Drawer。
+- **ASCII Wireframe**
+  ```
+  [Filter 260px] | [Delivery List] | [Detail/Workflow]
+  操作列：快速建立 / 建立出貨單
+  列表欄位：Delivery No / SO / Warehouse / Status / ShipDate
+  Pipeline (若啟用)：Packing → Ready → Shipped
+  ```
 
 ## Detail Panel / Drawer
 
@@ -32,7 +39,14 @@
 - 在 Detail Panel 的 Package Tab 顯示包裹列表，每筆可展開查看內容。  
 - 連結「新增包裹」→ 開啟子 Drawer：輸入箱號、重量、序號掃描紀錄。  
 - 支援「複製上一箱」與匯入 CSV（若有 WMS 資料）。  
-- Serial Tab：清單顯示 SKU + Serial/Lot，支援掃碼與批量貼上。
+- Serial Tab：清單顯示 SKU + Serial/Lot，支援掃碼與批量貼上。ASCII：
+  ```
+  ┌──── Packages ────┬──── Serial List ─────┐
+  │Pkg001  2.5kg     │SKU   Serial          │
+  │  • SKU A  Qty 2  │P-100 SN001           │
+  │Pkg002  1.2kg     │P-100 SN002           │
+  └──────────────────┴──────────────────────┘
+  ```
 
 ## 與 Sales Order / Warehouse
 

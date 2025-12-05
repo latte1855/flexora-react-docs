@@ -12,7 +12,7 @@
                               └────────────────────────────────────┘
 ```
 
-- **Filter Hub**：預設條件（低於安全庫存、已保留、異常），進階篩選（倉庫、儲位、SKU、Lot/Serial、Owner）。  
+- **Filter Hub**：預設條件（低於安全庫存、已保留、異常），進階篩選（倉庫、儲位、SKU、Lot/Serial、Owner）。搜尋支援 IME，必須按「套用」才送出 API，避免多次呼叫。
 - **主視圖**：
   - `Balance` Tab：顯示 SKU + Warehouse + Qty On Hand / Reserved / Available。  
   - `Reservation` Tab：列出被 Sales Order / Project 保留的紀錄，可釋放或轉移。  
@@ -32,7 +32,7 @@
 
 ## Drawer / 子 Drawer
 
-1. **Adjustment Drawer**：倉庫、SKU、調整數量、原因、附件。支援多行項。  
+1. **Adjustment Drawer**：倉庫、SKU、調整數量、原因、附件。支援多行項與欄位驗證（Qty >0、原因必填）。  
 2. **Transfer Drawer**：來源/目的倉庫或儲位、行項、序號選取。  
 3. **Reservation Drawer**：建立或修改保留條件（來源單據、數量、到期日）。  
 4. **Stock Count Drawer**：盤點任務設定、套用儲位與負責人，並可匯入盤點結果。  
@@ -54,10 +54,9 @@
 
 ## TODO
 
-- [ ] 置入實際 wireframe（Balance 列表、Drawer、Detail Panel）。  
-- [ ] 補欄位與驗證（序號輸入、重量、儲位格式）。  
-- [ ] 探討 Pipeline 是否適用於任務（如補貨/盤點）。  
+- [ ] 置入實際 wireframe（Balance 列表、Drawer、Detail Panel），含行距與欄寬。  
+- [ ] 補欄位與驗證（序號輸入、重量、儲位格式、日期）。  
+- [ ] 探討 Pipeline 是否適用於任務（如補貨/盤點），若取消需在 README 備註。  
 - [ ] 定義匯入/掃碼流程 UI（盤點、序號、調整）。  
 - [ ] 與 Delivery / Purchase / Manufacturing 的跳轉或子 Drawer 行為。  
 - [ ] 審批或通知的 UI（例如補貨審批、盤點審核）。  
-- **通知 / 任務**：右上角顯示補貨／盤點提醒，點擊可直接開 Drawer。

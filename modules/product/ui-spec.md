@@ -17,6 +17,14 @@
 - **操作列**：左側為 `快速建立產品`（Drawer，收集基本欄位）、右側黑底白字 `建立產品`（滿版編輯）。
 - **Detail Panel**：點選列表行時於右側展開，顯示摘要與快速動作（啟用/停售、複製 SKU），與報價 Summary 一致。
 - **Pipeline 視圖**：*待確認*；如無流程需求則隱藏切換器，TODO 已於 implementation plan 註記。
+- **Wireframe**：  
+  ```
+  [Filter Hub 260px] | [Main List 2/3] | [Detail Panel 1/3]
+  └─操作列 (Quick Create / 建立產品) 置於 Workspace 上方
+  └─List Row -> Drawer (基本 + SKU + PriceList)
+  ```
+  > Figma 草稿：`https://figma.com/file/TBD/flexora-product?node-id=hub`（TODO：待設計完成後更新）。
+  > PriceList Drawer Wireframe：`https://figma.com/file/TBD?node-id=pricelist-drawer`。
 
 ## List View
 

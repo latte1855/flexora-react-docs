@@ -16,6 +16,15 @@
 
 ## 主要資料表 / 欄位摘要（草稿）
 
+```
+Warehouse ─< Bin ─< InventoryBalance
+InventoryTransaction ──> InventoryBalance (影響 qty)
+InventoryReservation ──> SalesOrderLine / Project
+StockCount ─< StockCountLine
+ReplenishmentTask ──> Purchase/Replenishment Order
+SerialNumber / Lot ──< InventoryTransaction
+```
+
 | Entity | 重要欄位 | 備註 |
 | --- | --- | --- |
 | `Warehouse` | code, name, type, address, manager | 權限依 Warehouse/Team 控管 |
@@ -34,6 +43,16 @@
 5. **盤點**：建立 Stock Count → 匯入盤點結果 → 差異轉為 Adjustment Transaction。  
 6. **補貨建議**：每日排程計算 On Hand + 在途 + 保留，若低於 Min 則產生 Replenishment Task，對應 Purchase / Manufacturing。  
 7. **成本 / FIFO**：可選 FIFO / Average，Transaction 記錄成本來源以供會計對帳；若與 Finance 整合需定義帳務 API。  
+8. **通知 / 事件**：  
+   - `Reservation expiring`：透過 Notification Service 提醒 SO/PM。  
+   - `Low stock / Replenish`：當 On Hand < Min 觸發補貨任務並寄信。  
+   - `Stock Count pending approval`：盤點結果需審核時提醒倉管主管。
+
+## 匯入 / 掃碼 / 通知流程
+
+- **盤點匯入**：StockCount Drawer 提供 CSV 範本，欄位為 `warehouseCode,binCode,skuNo,qtyCounted,lot,serial`。匯入後顯示差異並允許再次下載錯誤報告。
+- **調整 / 轉移掃碼**：Adjustment/Transfer Drawer 在行項下方提供「掃描模式」，允許使用條碼槍輸入 SKU 或 Serial；若掃描序號不存在則顯示 `inventory.serialMismatch`。
+- **通知面板**：Workspace 右上角顯示補貨、盤點、保留到期提醒；引用 Notification 模組 API，點擊後可直接開啟相關 Drawer。
 
 ## TODO / 待補內容
 

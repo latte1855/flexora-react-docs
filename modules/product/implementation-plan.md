@@ -14,14 +14,16 @@
 | ID | 任務 | 說明 / 備註 | 狀態 |
 | --- | --- | --- | --- |
 | PROD-01 | `ItemGroup` / `Item` Domain | 建立產品線、`hasVariants` 欄位與 workflow | ⏳ |
-| PROD-02 | `ItemSKU` 表格 + Drawer | 支援 UoM、稅別、條碼、Variant Generator | ⏳ |
-| PROD-03 | PriceList vs. Product 邏輯 | 決定是否獨立模組 / 共享入口，設計 API | ⏳ |
-| PROD-04 | `ItemPrice` CRUD / 匯入 | 多幣別、通路、有效日期，並供報價查詢 | ⏳ |
-| PROD-05 | SKU Lookup Service | Async Select + 篩選（關鍵字、ItemGroup、PriceList） | ⏳ |
-| PROD-06 | UI – Catalog Workspace | Hub + List + Drawer；Pipeline 需求另列 TODO | ⏳ |
-| PROD-07 | PriceList UI/提示 | 在 SKU Drawer 顯示建議價，連結 PriceList 頁面 | ⏳ |
-| PROD-08 | Product Transaction API | 規劃整單儲存 payload（Item + SKU + ItemPrice） | ⏳ |
-| PROD-09 | PriceList 審批/歷史 | 若啟用 workflow，新增 `submit/approve/history` 端點 | ⏳ |
+| PROD-02 | Variant 定義與 Generator | CRUD for `VariantDimension/Value`、SKU 預覽/產生邏輯 | ⏳ |
+| PROD-03 | `ItemSKU` 表格 + Drawer | 支援 UoM、稅別、條碼、Ext Attr；含複製 SKU | ⏳ |
+| PROD-04 | PriceList vs. Product 邏輯 | 決定是否獨立模組 / 共享入口，設計 API | ⏳ |
+| PROD-05 | `ItemPrice` CRUD / 匯入 | 多幣別、通路、有效日期，並供報價查詢 | ⏳ |
+| PROD-06 | SKU Lookup Service | Async Select + 篩選（關鍵字、ItemGroup、PriceList） | ⏳ |
+| PROD-07 | UI – Catalog Workspace | Hub + List + Drawer；Pipeline 需求另列 TODO | ⏳ |
+| PROD-08 | PriceList UI/提示 | 在 SKU Drawer 顯示建議價，連結 PriceList 頁面；提供 Figma 樣式 | ⏳ |
+| PROD-09 | Product Transaction API | 規劃整單儲存 payload（Item + Variant + SKU + ItemPrice） | ⏳ |
+| PROD-10 | PriceList 審批/歷史 | 若啟用 workflow，新增 `submit/approve/history` 端點 | ⏳ |
+| PROD-11 | Variant/PriceList Wireframe | 產出 Hub/Drawer/Variant Figma；與 UI Spec 同步 | ⏳ |
 
 ## 3. TODO / 風險
 

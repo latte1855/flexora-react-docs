@@ -58,6 +58,40 @@
 - **Manufacturing**：BOM Issue / Receipt → 需復用 `inventory-transactions`。  
 - **Reporting**：提供 `GET /api/inventories/export` / `GET /api/inventory-transactions/export`。
 
+## DTO 參考（草稿）
+
+```json
+// InventoryTransactionDTO
+{
+  "type": "TRANSFER",
+  "warehouseId": 1,
+  "targetWarehouseId": 2,
+  "binId": 10,
+  "targetBinId": 11,
+  "skuId": 1001,
+  "qty": "15.00",
+  "uomId": 1,
+  "lot": "LOT-202512",
+  "serials": ["SN001","SN002"],
+  "referenceType": "SO",
+  "referenceId": 2005,
+  "reason": "inventory.adjustment",
+  "attachments": []
+}
+
+// InventoryReservationDTO
+{
+  "salesOrderId": 3001,
+  "lineId": 2,
+  "skuId": 1001,
+  "warehouseId": 1,
+  "qty": "5",
+  "dueDate": "2025-01-15",
+  "status": "ACTIVE",
+  "notes": "備貨專案 A"
+}
+```
+
 ## TODO
 
 - [ ] 將既有 Phase3 Controller 與新需求對照，整理實際 route。  

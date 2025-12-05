@@ -41,8 +41,9 @@
 
 ## TODO
 
-- [ ] 插入實際 wireframe / Figma 圖。  
-- [ ] 列出所有欄位與驗證（尤其重量、追蹤號碼、序號）。  
-- [ ] Pipeline 是否需要 → 與 PM 確認。  
+- [ ] 插入實際 wireframe / Figma 圖（Workspace、Package Drawer、Trace/Workflow）。  
+- [ ] 列出所有欄位與驗證（尤其重量、追蹤號碼、序號、收件地址）。  
+- [ ] Pipeline 是否需要 → 與 PM 確認，若保留需描述拖拉限制。  
 - [ ] 匯入/掃碼流程的 UI（可在 Package Drawer 補註）。  
-- [ ] 如果需顯示運費/票據等資訊，另建卡片。
+- [ ] 如果需顯示運費/票據等資訊，另建卡片。  
+- [ ] 通知提示：Detail Panel 顯示「已寄送 Email / SMS / Line」，歷史紀錄在 Timeline。  

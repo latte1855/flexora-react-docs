@@ -7,9 +7,12 @@
 
 | 模組 | 前端狀態 | 後端狀態 | 下一步 / TODO | 參考文件 |
 | --- | --- | --- | --- | --- |
-| 報價（Phase 4） | ✅ Quick Create / Quote Editor / Workflow Tab 改用 `/api/quotations/transactions`；Timeline Segment + 事件 chips 已上線；Workflow Drawer 仍使用 `triggerEvent`（有備註）。 | ✅ Transaction API / 交易落地完成；工作流事件維持 `triggerEvent`；QuotationThread preset enum 已初步實作。 | • 行項表格/匯入、Preview 行明細與 PDF<br>• Workflow Drawer 若需整批儲存再改造<br>• Saved Filters / Hub UX（篩選收藏、owner scope 標示） | [`docs/modules/quotation/README.md`](modules/quotation/README.md) |
-| 庫存 / 採購（Phase 3） | ⏳ Wireframe 與規格撰寫中，尚未進入實作。 | ⏳ Replenishment/Reservation 規則撰寫中，尚未實作。 | • 補齊 `phase3-inventory` 規格<br>• 根據 spec 拆工單 | [`docs/modules/inventory/README.md`](modules/inventory/README.md) |
-| 客戶/聯絡人模組 | ✅ Async Select 元件已提供篩選與 debounced 查詢，於報價模組 reuse。 | ✅ `CustomerResource` / `ContactResource` lookup API 可依關鍵字過濾；尚需補 owner scope 控制。 | • 大量資料下的 lazy load / caching 機制<br>• Saved filter / 權限控管 | [`docs/modules/customer/README.md`](modules/customer/README.md) |
+| 報價（Phase 4） | ✅ Quick Create / Quote Editor / Workflow Tab 改用 `/api/quotations/transactions`；Timeline Segment + 事件 chips 已上線；Workflow Drawer 仍使用 `triggerEvent`（有備註）。 | ✅ Transaction API / 交易落地完成；工作流事件維持 `triggerEvent`；QuotationThread preset enum 已初步實作。 | • 行項表格/匯入、Preview 行明細與 PDF<br>• Workflow Drawer 若需整批儲存再改造<br>• Saved Filters / Hub UX（篩選收藏、owner scope 標示） | [`modules/quotation/README.md`](modules/quotation/README.md) |
+| 庫存（Phase 3） | ⏳ Workspace/Drawer/Wireframe 草稿完成；欄位驗證、匯入/掃碼與通知仍在補。 | ⏳ Replenishment / Reservation / Transaction API 規格撰寫中。 | • 依 `modules/inventory/*` 補 ERD、API payload、通知流程<br>• 決定 Transaction/Reservation 實作與排程 | [`modules/inventory/README.md`](modules/inventory/README.md) |
+| 採購（Purchase） | ⏳ UI Spec 已含欄位驗證/匯入與 Pipeline 設計；尚未實作。 | ⏳ Domain/Workflow 梳理中。 | • 拆分 PO/Rfq/Receipt 任務<br>• 與 Inventory/Billing 整合、批次審批/匯入流程 | [`modules/purchase/README.md`](modules/purchase/README.md) |
+| 銷售訂單（Sales Order） | ⏳ Workspace/Drawer/欄位驗證草稿完成；Pipeline 規則待確認。 | ⏳ Transaction API/Workflow 尚未建置。 | • Hub + Pipeline 設計稿<br>• 匯入行項/交期批次調整、Delivery/Invoice 快捷 | [`modules/sales-order/README.md`](modules/sales-order/README.md) |
+| 客戶/聯絡人模組 | ✅ Async Select + Lookup API 已更新；API spec 補上 Transaction/Follow-up。 | ✅ `CustomerResource` / `ContactResource` 具 lookup 與 Data Scope；Owner scope 控制待加。 | • Lazy load / caching<br>• Workflow / 黑名單需求 | [`modules/customer/README.md`](modules/customer/README.md) |
+| Pricing / Product | ⏳ Product ERD/流程、Pricing Flow/Trace 文件已補；尚未啟動實作。 | ⏳ PriceRule/PriceList workflow 與 Transaction API 規劃中。 | • 依 implementation plan 將 PriceRule / Trace / Transaction API 拆工單<br>• 補 Variant/PriceList wireframe 與 PriceList workflow API | [`modules/pricing/README.md`](modules/pricing/README.md) |
 | 其他模組 | ⏸ 尚未開發 | ⏸ 尚未開發 | • 依專案時程逐步展開 | `docs/architecture/OVERVIEW.md` |
 
 ## 使用方式

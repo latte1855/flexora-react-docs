@@ -44,6 +44,23 @@
 6. **發票 / 付款**：與 AP 模組連動（可在 PO 內顯示付款狀態）。  
 7. **結案**：所有行項收貨完成或手動關閉；保留 Workflow/History 在 Timeline。  
 
+## 欄位與驗證（示例）
+
+| 類別 | 驗證重點 |
+| --- | --- |
+| Vendor / Buyer | vendorId 必填、buyerId 需在授權清單內；付款條件、幣別需與 Vendor 合約吻合 |
+| 行項 | `qtyOrdered > 0`、`uom` 與 SKU 相容、`qtyReceived <= qtyOrdered`、稅別/PriceList 需匹配 |
+| 交期 / 地址 | `requestedDeliveryDate >= orderDate`; 多交期行需逐行檢查；地址沿用 AddressSnapshot 結構 |
+| Workflow 欄位 | 審批時僅允許指定欄位可編輯，並在 Timeline 顯示原因 |
+| Receipt | 需輸入倉庫、收貨人；若序號/批號必填，未提供不得過帳 |
+
+## 匯入 / 批次流程
+
+- **Rfq / PO 匯入**：支援 CSV/Excel；欄位包含 `vendorCode, skuNo, qty, unitPrice, deliveryDate` 等。匯入前提供預覽，錯誤行需註明原因。  
+- **Receipt 匯入／掃碼**：可上傳 CSV 或以掃碼方式輸入實收數量、批號、序號；支援即時驗證。  
+- **匯出**：列表可匯出 PO/Rfq/Receipt，方便供應商下載或內部對帳。  
+- **批次送審 / 批次核准**：在 Workspace 多選後可一次送審或核准（需權限）。  
+
 ## TODO
 
 - [ ] 匯入 ERD 與流程圖（RFQ、PO、Receipt、Return、Invoice）。  

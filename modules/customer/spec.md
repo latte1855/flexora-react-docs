@@ -30,11 +30,29 @@
 3. 透過 Drawer 建立 / 編輯；可快速建立 Contact、Address。  
 4. Activity / Follow-up：可在 Detail 直接記錄或分頁顯示。
 
+### Filter / Query 條件
+
+| 條件 | 說明 |
+| --- | --- |
+| Owner / Team | 我的 / 我的團隊 / 全部（需權限） |
+| 狀態 | ACTIVE / INACTIVE / BLACKLIST / 待審 |
+| 客戶群 / Industry / Channel | 多選 chips，可儲存收藏 |
+| 健康指標 | `healthStatus`, `lastActivityAt`, `followUpDate` |
+| 是否逾期付款 | 需連結 AP 模組 |
+| 標籤 / Ext Attr | 支援自訂屬性為條件 |
+
 ## Workflow / 資料權限
 
 - 目前尚未有正式 Workflow；若需要審核流程（例如新客戶需審批），可新增 `status` 欄位與 `CustomerStateTransitionResource`。  
 - 權限：`Owner` + `Team` + Data Scope（參考 `docs/modules/inventory/...`）。  
 - 預計：`Owner` 可編輯；同部門可檢視；黑名單可限制。
+
+### 匯入 / 匯出
+
+- CSV 欄位：`customerCode,name,type,taxId,ownerAccount,customerGroup,industry,paymentTerm,creditLimit,currency,status`.  
+- 匯入流程：上傳 → 預覽 → 顯示錯誤（例如稅號格式、重複名稱）→ 確認入庫。  
+- 匯出：依目前篩選輸出；需 `CUSTOMER_EXPORT` 角色；若客戶屬敏感級別需另行權限。  
+- GDPR/個資：需提供「匿名化 / 刪除」申請流程並記錄 audit log。
 
 ## TODO
 

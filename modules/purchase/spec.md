@@ -44,6 +44,20 @@
 6. **發票 / 付款**：與 AP 模組連動（可在 PO 內顯示付款狀態）。  
 7. **結案**：所有行項收貨完成或手動關閉；保留 Workflow/History 在 Timeline。  
 
+### Pipeline / Workflow 規則
+
+| 狀態 | 編碼 | 說明 | 允許拖曳 | 事件 |
+| --- | --- | --- | --- | --- |
+| 草稿 | DRAFT | 初始建立 | RFQ / IN_REVIEW | save, submit |
+| 詢價 | RFQ | 正向 Vendor 發送 RFQ | IN_REVIEW | convertQuote, cancel |
+| 審核中 | IN_REVIEW | 主管審批 | APPROVED | approve, reject |
+| 已核准 | APPROVED | 待收貨 | RECEIVING | release, cancel |
+| 收貨中 | RECEIVING | 已有 GRN | CLOSED | postReceipt |
+| 已結案 | CLOSED | 成功完成 | — | — |
+| 已取消 | CANCELLED | 終止 | — | cancel |
+
+> Workflow API 需依 `PurchaseOrderEventDefResource`/`StateTransitionResource` 控制，與 UI Pipeline 一致。
+
 ## 欄位與驗證（示例）
 
 | 類別 | 驗證重點 |
@@ -69,3 +83,4 @@
 - [ ] 匯入/同步（CSV/Excel、ERP）規格與錯誤處理。  
 - [ ] UI 與 API 的欄位清單、驗證規則、Workflow 事件參數。  
 - [ ] 若需 PriceList / Contract 整合，補充關聯與查價邏輯。  
+- [ ] Pipeline/Workflow 表需在 API spec 中同步，並在 UI/README 標示。  

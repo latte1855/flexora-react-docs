@@ -18,6 +18,13 @@
 - **List View**：欄位包含 SO 編號、客戶、狀態、交期、金額、Owner。Row 點擊展開右側 Detail。
 - **Pipeline View**：沿用報價規則 `DRAFT → IN_REVIEW → APPROVED → FULFILLED`，僅允許拖曳到下一階段且需權限；若 PM 改為僅 List 再在 README/本檔更新。
 
+| 狀態 | 可拖曳到 | 條件 | UI 限制 |
+| --- | --- | --- | --- |
+| DRAFT | IN_REVIEW | 客戶、PriceList、行項齊全 | 缺欄位則顯示 Toast |
+| IN_REVIEW | APPROVED | 審批人具權限且金額未超門檻 | Workflow Drawer 顯示審批表單 |
+| APPROVED | FULFILLED | 已建立 Delivery Note 或設定出貨日期 | 若尚未建立 Delivery，顯示提醒 |
+| FULFILLED | CLOSED | 所有 Delivery/Invoice 完成 | 僅系統或權限者可操作 |
+
 ## Detail / Drawer
 
 1. **Detail Panel（右側）**
@@ -42,6 +49,30 @@
   ```
 - 批次審批/批次送審：列表多選後顯示按鈕（需權限）。
 - 若需要同步出貨狀態，在 Detail Panel 的行項卡顯示 Delivery Note/Receipt。
+
+| CSV 欄位 | 必填 | 說明 |
+| --- | --- | --- |
+| skuNo | ✔ | 允許從 Quote 帶入，若不存在回傳 `error.sku.notFound` |
+| description | ✖ | 若空白使用 SKU 名稱 |
+| qty | ✔ | >0；允許小數 |
+| uomCode | ✔ | 與 SKU UoM 一致 |
+| unitPrice | ✔ | >=0，若 PriceList 有值會顯示差異 |
+| discountType/discountValue | ✖ | PERCENT / AMOUNT |
+| shipDate | ✖ | 預設使用交期 |
+| taxCode | ✖ | 預設 SKU 稅別 |
+
+### 欄位驗證（主要欄位）
+
+| 欄位 | 規則 | 錯誤提示 |
+| --- | --- | --- |
+| Customer | 必填；客戶需為 ACTIVE | `salesOrder.customer.required` |
+| PriceList | 必填或顯示「尚未指定價目表」警示 | inline badge |
+| Requested Delivery Date | 不得早於今天；若跨時區顯示當地日期 | Drawer error |
+| Owner | 必須屬於當前使用者可指派名單 | Toast |
+| 行項 Qty | >0；不可輸入 NaN；輸入 IME 時先緩存 | inline error |
+| 單價 | >=0；與 PriceList 差異超過 20% 顯示警示 | inline badge |
+| 稅別 | 與 SKU/客戶所在地相容 | `salesOrder.tax.invalid` |
+| 地址 | Billing/Shipping 使用 AddressSnapshot；缺 Line1/Country 不得送審 | Drawer error |
 
 ## Workflow / Timeline UI
 

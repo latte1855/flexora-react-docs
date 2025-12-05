@@ -15,10 +15,11 @@
 2. **API 設計**：產出補貨、保留、批次作業 API 草圖，明確 DTO 與 Job 流程。
 3. **UI Wireframe**：整理庫存工作區的畫面/互動，確立與報價/訂單的串接方式（含匯入/掃碼流程、通知）。
 
-## 客戶（Customer / CRM）
+## 客戶 / 聯絡人（Customer & Contact）
 1. **Owner 篩選 / 權限**：定義 Owner scope、Async Select caching、Saved Filter 行為。
 2. **Workspace 互動**：確認分頁、篩選、活動紀錄等組件，與報價共用 UI 元件。
 3. **API 文檔化**：將 Customer / Contact Resource 的查詢、關聯、權限整理進 API spec。
+4. **匯入/匯出流程**：依 spec/UI 補實作，含 CSV 欄位驗證、錯誤呈現、GDPR 匿名化需求。
 
 ## 採購（Purchase）
 1. **PO/Rfq/Receipt 任務拆解**：依 `modules/purchase/implementation-plan.md` 定義任務工單。

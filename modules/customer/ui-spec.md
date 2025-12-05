@@ -16,6 +16,13 @@
 - **List View**：欄位（客戶名稱、Owner、客戶群、狀態、最近活動、健康度）。  
 - **Kanban（可選）**：若需要以 Pipeline 方式呈現（例如 潛在→洽談→客戶），可沿用報價 Pipeline 元件。
 
+| Filter 預設 | 說明 |
+| --- | --- |
+| 我的客戶 | owner==currentUser |
+| 潛在 | status==PROSPECT |
+| 黑名單 | status==BLACKLIST |
+| 30天未跟進 | lastActivityAt < today-30 |
+
 ## Detail Panel
 
 - **摘要卡**：客戶基本資料、Owner、付款條件、健康指標（Health Status, Last Activity）。  
@@ -32,6 +39,17 @@
 5. **Ext Attr**：三欄網格輸入。  
 6. **Full Editor**：左右佈局 + Footer（取消 / 儲存 / 送審）。
 
+### 欄位驗證
+
+| 欄位 | 規則 | 提示 |
+| --- | --- | --- |
+| name | 必填，禁止重複（同租戶） | inline |
+| taxId | 若 type=法人則必填並檢核格式 | `customer.tax.invalid` |
+| ownerId | 必須在可指派清單，預設為登入者 | Toast |
+| paymentTerm | 可選但若留白需提醒 | inline badge |
+| 地址 | AddressSnapshot（Country + Line1）必填；可自動帶入公司名稱 | Drawer error |
+| mainContact | 選填；若 contact 屬於其他客戶需顯示警告 | inline |
+
 ## 聯絡人 / Activity 整合
 
 - Detail Panel 的聯絡人 Tab：使用 Contact 模組的列表元件（支援搜尋/新增/標星）。  
@@ -44,4 +62,9 @@
 - [ ] 確認 Kanban 是否需要；若不需要，移除該選項。  
 - [ ] 詳列欄位驗證（稅號格式、Email 驗證、地址自動帶入）。  
 - [ ] 若有 Workflow/審批，描述 UI 上的按鈕與提示。  
-- [ ] 規劃匯入/匯出功能的入口（在操作列或 Drawer）。*** End Patch
+- [ ] 規劃匯入/匯出功能的入口（在操作列或 Drawer）。
+
+## 匯入/匯出 UI
+
+- 操作列提供 `匯入`，步驟：下載模板 → 上傳 → 預覽錯誤 → 套用。欄位與 spec 中 CSV 欄位一致。  
+- 匯出依當前篩選輸出 CSV；匯出按鈕需根據權限顯示。

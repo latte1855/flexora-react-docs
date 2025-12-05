@@ -16,7 +16,7 @@
 
 - **Filter Hub**：提供 Preset + 進階篩選（關鍵字、客戶、Owner、狀態、交期區間、PriceList、是否有出貨）。搜尋欄位採「輸入後按 Enter/套用才觸發」，避免每個字都打 API；若關閉 Pipeline，需在 README 註明僅使用 List。 
 - **List View**：欄位包含 SO 編號、客戶、狀態、交期、金額、Owner。Row 點擊展開右側 Detail。
-- **Pipeline View**（可選）：若要追蹤 `DRAFT → IN_REVIEW → APPROVED → FULFILLED`，可與報價的 Pipeline 元件共用；若 PM 決議停用，需在 README 標記只使用 List。
+- **Pipeline View**：沿用報價規則 `DRAFT → IN_REVIEW → APPROVED → FULFILLED`，僅允許拖曳到下一階段且需權限；若 PM 改為僅 List 再在 README/本檔更新。
 
 ## Detail / Drawer
 
@@ -53,6 +53,6 @@
 
 - [ ] 置入實際 wireframe / 圖示（Hub + Drawer + Detail + Pipeline）。  
 - [ ] 明細欄位與驗證規則（含 PriceList/稅別連動）。  
-- [ ] Pipeline View 是否真的需要 → 待 PM 確認，若需要需描述拖拉行為。  
+- [ ] Pipeline View 拖拉規則與權限要與報價相同；若日後取消 Pipeline，記得同步 README 與此 TODO。  
 - [ ] 與 Delivery / Invoice 的連結（Detail Panel 中顯示快捷連結）。  
 - [ ] 匯入/批次操作 UI（匯入行項、批次更新交期、批次送審）。  

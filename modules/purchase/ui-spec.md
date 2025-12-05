@@ -18,7 +18,7 @@
   - 操作列：`快速建立 PO`（Drawer）與黑底 `建立 PO`（滿版）。  
   - 視圖：列表為主，Pipeline 視圖視需求保留。
 - **Detail Panel**：點擊列表行後在右側展開，顯示 PO 摘要、Workflow 按鈕、附件、Rfq/Receipt 連結。
-- **Pipeline 互動**：若 PM 核可保留 Pipeline，欄位為 `DRAFT → RFQ → IN_APPROVAL → APPROVED → RECEIVING → CLOSED`。拖曳時需檢查是否允許跳階，並在 Hub 進階篩選顯示目前 owner。若不採 Pipeline，需在 README 標註「僅 List」。
+- **Pipeline 互動**：沿用報價規則，狀態為 `DRAFT → RFQ → IN_REVIEW → APPROVED → RECEIVING → CLOSED`。僅允許拖曳到下一階段並需權限，`RECEIVING` → `CLOSED` 需確認行項收貨完成。
 
 ## Purchase Order – Drawer / Full Editor
 

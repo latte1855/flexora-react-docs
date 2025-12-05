@@ -14,4 +14,4 @@
 - [`docs/flexora-salesorder-management-spec.md`](../../flexora-salesorder-management-spec.md)
 - 報價模組：`docs/modules/quotation/README.md`
 
-> **Pipeline 決議**：是否沿用 Pipeline 視圖仍待 PM 確認。若最終僅保留 List/Detail，請在 `ui-spec` 及此 README 註記；若採 Pipeline，需定義狀態順序、拖拉權限與通知行為。
+> **Pipeline**：SO 模組沿用報價 Pipeline 規則（`DRAFT → IN_REVIEW → APPROVED → FULFILLED`）。拖曳僅允許下一階狀態並需權限，`APPROVED` → `FULFILLED` 需確認 Delivery/Invoice 完成，取消 Pipeline 時請同步此檔與 UI spec。

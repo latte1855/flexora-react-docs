@@ -15,4 +15,4 @@
 - [`docs/flexora-purchase-management-spec.md`](../../flexora-purchase-management-spec.md)
 - `docs/specs/phase3-inventory/*` 中的採購補貨段落
 
-> **Pipeline 說明**：PM 尚在評估是否採用 Pipeline 視圖。若未啟用，本模組僅提供 List + Detail；若啟用則狀態將使用 `DRAFT → RFQ → IN_REVIEW → APPROVED → RECEIVING → CLOSED`，並需實作拖拉規則。請在規格確認後同步本檔與 UI spec。
+> **Pipeline 說明**：與報價模組一致，採用 Pipeline（`DRAFT → RFQ → IN_REVIEW → APPROVED → RECEIVING → CLOSED`）。拖拉規則：僅允許往下一階狀態拖曳，且需要對應權限；`RECEIVING` → `CLOSED` 需所有行項收貨完成。若日後需取消 Pipeline，請同步本檔與 UI spec。

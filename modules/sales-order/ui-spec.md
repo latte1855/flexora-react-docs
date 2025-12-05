@@ -41,6 +41,7 @@
 
 - Detail Panel 中加入「查看流程圖」按鈕（與報價一致）。
 - Timeline Tab：顯示 `submit/approve/reject/cancel` 紀錄，支援版本篩選（僅此 SO）。
+- 在 Workflow 區顯示目前事件可執行的按鈕與下一步提示。
 
 ## TODO
 
@@ -48,3 +49,4 @@
 - [ ] 明細欄位與驗證規則（含 PriceList/稅別連動）。
 - [ ] Pipeline View 是否真的需要 → 待 PM 確認。
 - [ ] 與 Delivery / Invoice 的連結（Detail Panel 中顯示快捷連結）。
+- [ ] 匯入/批次操作 UI（例如匯入行項、批次更新交期）。  

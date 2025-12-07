@@ -349,11 +349,46 @@ const sidebar = (
 
 **設計原則**：
 1. **寬度**: 固定 `640px`
-2. **步驟導航**: 使用 Step 元件或 Tab 元件
+2. **步驟導航**: 使用報價單樣式的可點選步驟精靈
+   ```tsx
+   <div className="flex gap-3 mb-6">
+       <button
+           type="button"
+           className={`flex-1 rounded-md border px-3 py-2 text-sm transition-colors ${
+               step === 0
+                   ? 'border-primary bg-primary/10 text-primary'
+                   : 'border-gray-200 hover:border-primary'
+           }`}
+           onClick={() => setStep(0)}
+       >
+           Step 1 · 基本資訊
+       </button>
+       {/* 更多步驟... */}
+   </div>
+   ```
 3. **表單佈局**: 使用 `space-y-4` 間距
 4. **欄位標籤**: `text-xs text-gray-500` + 必填標記 `*`
-5. **按鈕區**: 底部固定，包含「上一步」「預覽」「建立」等按鈕
-6. **載入狀態**: 提交時禁用所有輸入並顯示 loading
+5. **按鈕區**: 底部固定，使用 `justify-between` 佈局
+6. **按鈕邏輯**:
+   - 第一步：左側「取消」，右側「下一步」
+   - 中間步：左側「上一步」，右側「下一步」
+   - 最後步：左側「上一步」，右側「建立草稿」
+   ```tsx
+   <div className="mt-6 flex justify-between">
+       {step === 0 ? (
+           <Button variant="plain" onClick={handleClose}>取消</Button>
+       ) : (
+           <Button variant="plain" onClick={() => setStep(step - 1)}>上一步</Button>
+       )}
+       
+       {step === lastStep ? (
+           <Button variant="solid" onClick={handleCreate}>建立草稿</Button>
+       ) : (
+           <Button variant="solid" onClick={() => setStep(step + 1)}>下一步</Button>
+       )}
+   </div>
+   ```
+7. **載入狀態**: 提交時禁用所有輸入並顯示 loading
 
 **參考實作**：
 - 報價單快速建立: `views/sales/quotes/components/QuickCreateDrawer.tsx`

@@ -299,3 +299,64 @@ const sidebar = (
 | Overlay header | `sm` | `plain` | 上一筆/下一筆/關閉 |
 | Overlay header | `sm` | `solid` | 快速建立（黑底白字） |
 | 快速操作區塊 | `sm` | `default` | 所有操作按鈕 |
+
+---
+
+## Drawer 元件規範
+
+### Drawer 寬度標準
+
+| Drawer 類型 | 寬度 | 說明 |
+|-----------|------|------|
+| 工作流程 Drawer | `420px` | 用於觸發工作流程事件（WorkflowDrawer） |
+| 快速建立 Drawer | `640px` | 用於快速建立單據（QuickCreateDrawer） |
+| 一般資訊 Drawer | `480px` | 用於顯示詳細資訊或簡單表單 |
+
+### Drawer 配置範例
+
+```tsx
+// 工作流程 Drawer
+<Drawer
+  closable
+  isOpen={open}
+  placement="right"
+  width={420}
+  title="Workflow 動作"
+  shouldCloseOnOverlayClick={!submitting}
+  onClose={onClose}
+>
+  {/* 內容 */}
+</Drawer>
+
+// 快速建立 Drawer
+<Drawer
+  closable
+  isOpen={open}
+  placement="right"
+  width={640}
+  title="快速建立"
+  shouldCloseOnOverlayClick={!submitting}
+  onClose={onClose}
+>
+  {/* 多步驟表單內容 */}
+</Drawer>
+```
+
+### 快速建立 Drawer 設計指南
+
+> [!NOTE]
+> QuickCreateDrawer 不泛化為共用元件，各模組應根據業務需求自行實作
+
+**設計原則**：
+1. **寬度**: 固定 `640px`
+2. **步驟導航**: 使用 Step 元件或 Tab 元件
+3. **表單佈局**: 使用 `space-y-4` 間距
+4. **欄位標籤**: `text-xs text-gray-500` + 必填標記 `*`
+5. **按鈕區**: 底部固定，包含「上一步」「預覽」「建立」等按鈕
+6. **載入狀態**: 提交時禁用所有輸入並顯示 loading
+
+**參考實作**：
+- 報價單快速建立: `views/sales/quotes/components/QuickCreateDrawer.tsx`
+- 包含：基本資訊 → 行項 → 預覽 三步驟
+- 支援模式：建立 / 修訂 / 編輯草稿
+

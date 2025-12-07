@@ -1,6 +1,6 @@
 # Product Module – UI Spec (草稿)
 
-## 全域佈局
+## 全域佈局（沿用 Quote Workspace 樣式）
 
 ```
 ┌──────── Filter Hub ────────┐┌───────── Workspace ─────────┐
@@ -12,10 +12,11 @@
 └────────────────────────────┘
 ```
 
-- **Preset 行為**：點選後更新 `ownerScope + filters`，並在 Chips 顯示條件（同報價 Hub）。
-- **進階篩選**：搜尋（支援中文 IME，Enter 或按「套用」才觸發）、ItemGroup、分類、Owner、狀態、PriceList、是否有 Variants。
-- **操作列**：左側為 `快速建立產品`（Drawer，收集基本欄位）、右側黑底白字 `建立產品`（滿版編輯）。
-- **Detail Panel**：點選列表行時於右側展開，顯示摘要與快速動作（啟用/停售、複製 SKU），與報價 Summary 一致。
+- **套版原則**：本模組必須與 `/sales/quotes` 完全一致的操作體驗。Hub 可收合、右側有固定的 Filter Toolbar + List/Pipeline 切換，左右欄距離維持 sidebar 280px + 16px gap，不得額外加 padding。所有按鈕、Segment、字體、圓角以報價單為準。
+- **Preset 行為**：點選後更新 `ownerScope + filters`，並在 Chips 顯示條件。
+- **進階篩選**：搜尋（支援中文 IME，按「套用」或 Enter 才查詢）、ItemGroup、分類、Owner、狀態、PriceList、是否有 Variants。
+- **操作列**：左側 `Segment (列表/Pipeline)`、中間 `流程圖`（GitBranch icon），右側依序為黑底 `快速建立產品`（Sparkles icon，Drawer 寬 640px）與主色 `建立產品`（FilePlus icon，滿版 Editor）。
+- **Detail Panel**：點選列時開啟「滿版 Overlay」，排版與 QuoteDetail 相同：大卡片包裹左右欄、右側為「快速操作 + 統計卡」，所有按鈕尺寸、排序、icon 完全比照報價單。
 - **Pipeline 視圖**：*待確認*；如無流程需求則隱藏切換器，TODO 已於 implementation plan 註記。
 - **Wireframe**：  
   ```
@@ -42,19 +43,22 @@
 
 ## Detail / Drawer / Full Editor
 
-1. **Item Info 卡**：顯示 ItemGroup、品牌、分類、`hasVariants`（toggle）。這裡也顯示 PriceList 建議情況（例如「3 個價目表已設定」）。
-2. **SKU 表格**：與 List 類似，但附加庫存狀態、條碼。  
+1. **Detail Overlay 標頭**：左側「檢視中 + Item 名稱 / code + Tag + Status Badge」，右側按鈕依序為「上一筆 / 下一筆 / 流程圖 / 快速建立產品 / 關閉」，尺寸、icon、顏色與 QuoteDetail 相同（黑底 Sparkles、plain 上下筆）。
+2. **左右欄**：外層使用預設 `<Card>`（無額外圓角/padding），內層小卡沿用 QuoteDetail：左邊為主資訊 + ExtAttr + Tabs，右邊為「快速操作」(GitBranch、建立新版本、啟動 Workflow、查看 SKU/PriceList) 與「統計資訊」。卡片圓角、陰影、間距需完全一致。
+3. **Item Info 卡**：顯示 ItemGroup、Owner、Channel、Default PriceList、更新時間、`hasVariants`。描述放在卡片底部。
+4. **SKU 表格**：與 List 類似，但附加庫存狀態、條碼。  
    - 表格上方提供「新增 SKU」「匯入 CSV」「Variant Generator」。  
-3. **SKU Drawer**：欄位包含：
+5. **SKU Drawer**：欄位包含：
    - 基本資訊：SKU No、名稱、描述、啟用狀態。
    - 資料屬性：UoM（Async Select）、稅別、包裝、條碼、預設倉庫。
    - PriceList 摘要：以 Accordion 或表格顯示各價目表的建議價、有效期，並提供「編輯價目表」連結。
    - Ext Attr：三欄網格（若該 SKU 有客製欄位）。
-4. **Variant Flow**（僅 `hasVariants=true`）：
+6. **Variant Flow**（僅 `hasVariants=true`）：
    - Step 1：選擇維度（顏色、尺寸…），設定維度值。
    - Step 2：系統預覽 SKU 組合，使用者可取消/重新命名。
    - Step 3：產生 SKU，進入表格；每個 SKU 還是可單獨編輯。
-5. **Full Editor（建立產品）**：
+7. **Detail 卡片格式**：欄位卡使用 `rounded-2xl border border-gray-100 bg-white/70 p-4 shadow-sm`，欄位值加 `font-semibold`；快速操作 / 統計卡標題使用 `text-xs text-gray-500`、內容 `text-sm`，不得改變 padding 以維持與報價單一致。
+8. **Full Editor（建立產品）**：
    - 版面沿用報價整單編輯：左側主資訊卡 + SKU 區塊，右側為 PriceList 摘要/操作紀錄。
    - Page Footer：固定顯示「取消 / 儲存 / 送審」，若流程未啟用則只顯示 儲存。
 

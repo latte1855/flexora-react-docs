@@ -26,6 +26,7 @@
 | PROD-11 | Variant/PriceList Wireframe | 產出 Hub/Drawer/Variant ASCII Wireframe，標題與 UI Spec 同步 | ⏳ |
 | PROD-12 | API 欄位/審批協作 | 與後端確認 Transaction API 欄位與 Variant/Price 審批策略；紀錄 meeting note、open issue | ⏳ |
 | PROD-13 | 實作工單拆解 | 依最終欄位/審批決策拆成後端/前端工單：Variant Generator、Transaction API、PriceList Workflow | ⏳ |
+| PROD-15 | 共用 Workspace 版型 | 導入 `WorkspaceLayout`（共用 Hub + List + Drawer 架構），後續模組照此模板實作 | ✅ |
 | PROD-14 | Price Transaction QA | 擬定整單 transaction 測試案例（CRUD、審批、rollback） | ⏳ |
 
 ### 近期討論紀錄（2025-12-03）

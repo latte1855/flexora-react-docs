@@ -27,6 +27,64 @@
 
 ---
 
+## 2025-12-07 — 模組 UI Component 架構設計
+
+**摘要：**  
+從報價單模組解構可複用 UI Component，建立 `components/workspace/` 目錄，採用**配置驅動 + 組合**混合設計模式。
+
+**決策內容：**
+1. **驗證策略**：先用 Sales Order 模組驗證新元件，不先動報價單；驗證完成後再重構報價單
+2. **元件目錄**：放置於 `components/workspace/`
+3. **設計模式**：配置物件控制通用行為 + React children 組合保留彈性
+4. **文件要求**：需建立元件使用指南供其他 Agent 使用
+
+**背景：**
+- 報價單模組已實作完整 UI 結構（Workspace + Sidebar + List/Pipeline + Detail）
+- 後續模組（Sales Order、Customer 等）需複用相同結構
+- 報價單有版本管理（Thread + Revision）為專有邏輯，不適合泛化
+
+**影響：**
+- 新增 `flexora-react-ui/src/components/workspace/` 目錄
+- 新增 `docs/ui/components/workspace-components.md` 元件使用指南
+- 後續模組開發應參考此指南
+
+**相關文件：**
+- 分析文件：`docs/modules/component-architecture/module-ui-component-analysis.md`
+- 元件使用指南：`docs/ui/components/workspace-components.md`
+
+**ADR：**  
+*不需 ADR（屬 UI 元件組織方式，可漸進調整）*
+
+**補充決策（Phase 1-4 完成後）：**
+
+1. **詳情頁寬度規範**
+   - 右側 sidebar 必須使用 `w-full lg:w-80`
+   - 與報價單詳情頁保持一致，避免左欄超出容器寬度
+
+2. **Overlay Header 按鈕標準**
+   - 必須包含：上一筆、下一筆、快速建立、關閉
+   - 上下頁按鈕使用 `variant="plain"` + disabled 狀態控制
+   - 快速建立使用 `variant="solid"` + 黑底白字樣式
+
+3. **快速操作區塊樣式規範**
+   - 標題：`text-xs text-gray-500 mb-2`
+   - 按鈕容器：`flex flex-wrap gap-2`
+   - 按鈕：`size="sm" variant="default"`
+
+4. **擴展性設計**
+   - ✅ Tabs 可由各模組自由增加，不需修改元件
+   - ✅ Sidebar 可由各模組新增自訂卡片，不需修改元件
+   - ❌ 關閉按鈕不應放在 sidebar 底部（應在 Overlay header）
+
+**驗證結果：**
+- Phase 1-4 已在 Sales Order 模組驗證完成
+- Commit: `d25b701` - feat(workspace): add reusable workspace components (Phase 1-4)
+- 14 個檔案，1544 行新增
+
+
+
+---
+
 ## 2025-02 — 採用 Code-first 而非 API-first（OpenAPI Generator 停用）
 
 **摘要：**  

@@ -395,3 +395,192 @@ const sidebar = (
 - 包含：基本資訊 → 行項 → 預覽 三步驟
 - 支援模式：建立 / 修訂 / 編輯草稿
 
+---
+
+## 詳情頁 Overlay 規範
+
+詳情頁 Overlay 是點選列表項目後顯示的全螢幕詳情預覽頁面。
+
+### 容器結構
+
+```tsx
+{/* 背景遮罩 */}
+<div className="fixed inset-0 z-40 flex flex-col bg-black/40 backdrop-blur-sm">
+    {/* 內容容器 */}
+    <div className="relative flex-1 overflow-y-auto bg-white shadow-2xl dark:bg-gray-950">
+        {/* Header - 固定在頂部 */}
+        <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 bg-white/95 px-6 py-4 backdrop-blur dark:border-gray-800 dark:bg-gray-900/90">
+            {/* 左側：標題區 */}
+            <div>
+                <div className="text-xs text-gray-500">檢視中</div>
+                <div className="text-lg font-semibold">{recordTitle}</div>
+            </div>
+            {/* 右側：按鈕區 */}
+            <div className="flex flex-wrap items-center gap-2">
+                <Button size="sm" variant="plain" onClick={navigatePrev}>上一筆</Button>
+                <Button size="sm" variant="plain" onClick={navigateNext}>下一筆</Button>
+                <Button size="sm" variant="solid" onClick={quickCreate}>快速建立</Button>
+                <Button size="sm" variant="plain" onClick={close}>關閉</Button>
+            </div>
+        </div>
+        
+        {/* 主要內容區 */}
+        <div className="px-6 py-5">
+            {/* 詳情內容，使用 ModuleDetailContainer 或自訂結構 */}
+        </div>
+    </div>
+</div>
+```
+
+### 設計規範
+
+| 屬性 | 規範值 |
+|-----|--------|
+| z-index | `z-40`（Overlay），`z-10`（Header） |
+| 背景遮罩 | `bg-black/40 backdrop-blur-sm` |
+| Header padding | `px-6 py-4` |
+| 內容區 padding | `px-6 py-5` |
+| 按鈕大小 | `size="sm"` |
+| 導航按鈕 | `variant="plain"` |
+| 主要操作按鈕 | `variant="solid"` |
+
+### Header 按鈕順序
+
+1. **上一筆** - 導航到上一個項目（disabled 時灰顯）
+2. **下一筆** - 導航到下一個項目（disabled 時灰顯）
+3. **快速建立**（可選）- 快速新增相關記錄
+4. **關閉** - 關閉 Overlay 返回列表
+
+**參考實作**：
+- 報價單詳情: `views/sales/quotes/components/QuoteDetail.tsx`
+- 銷售訂單詳情: `views/sales/sales-orders/components/SalesOrderDetail.tsx`
+
+---
+
+## 完整編輯頁規範
+
+完整編輯頁是進行複雜表單編輯的全螢幕頁面（如報價單編輯器）。
+
+### 容器結構
+
+```tsx
+{/* 全螢幕 Overlay */}
+<div className="fixed inset-0 z-50 flex flex-col bg-black/40 backdrop-blur-sm">
+    <div className="relative flex-1 overflow-hidden">
+        <div className="absolute inset-0 overflow-y-auto bg-white dark:bg-gray-950">
+            
+            {/* Header - 固定在頂部 */}
+            <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 px-6 py-4 backdrop-blur dark:border-gray-800 dark:bg-gray-900/90">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    {/* 左側：標題 */}
+                    <div>
+                        <div className="text-xs text-gray-500">{modeLabel}</div>
+                        <h2 className="text-xl font-semibold">{pageTitle}</h2>
+                    </div>
+                    {/* 右側：操作按鈕 */}
+                    <div className="flex items-center gap-2">
+                        <Button variant="plain" onClick={onCancel}>取消</Button>
+                        <Button variant="solid" onClick={onSave}>儲存</Button>
+                    </div>
+                </div>
+                {/* 載入提示（可選） */}
+                {loading && (
+                    <div className="mt-3 flex items-center gap-2 text-sm text-gray-500">
+                        <Spinner size={14} />
+                        正在載入資料…
+                    </div>
+                )}
+            </div>
+            
+            {/* 表單內容區 */}
+            <div className="px-6 py-6 space-y-6">
+                {/* 使用 grid 佈局 */}
+                <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+                    {/* 主要表單區（左側） */}
+                    <div className="space-y-6">
+                        <Card className="p-5 space-y-6">
+                            {/* 表單欄位 */}
+                        </Card>
+                    </div>
+                    
+                    {/* 側邊欄（右側） */}
+                    <div className="space-y-6">
+                        {/* 預覽、計價摘要等 */}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+```
+
+### 設計規範
+
+| 屬性 | 規範值 |
+|-----|--------|
+| z-index | `z-50`（高於詳情頁 Overlay） |
+| 主區塊佈局 | `grid gap-6 lg:grid-cols-[2fr,1fr]` |
+| 表單卡片 | `Card className="p-5 space-y-6"` |
+| 欄位間距 | `space-y-4` 或 `gap-4` |
+| 欄位標籤 | `text-xs text-gray-500 mb-1` |
+| 必填標記 | `<span className="ml-1 text-red-500">*</span>` |
+
+### 欄位標籤元件
+
+```tsx
+const FieldLabel = ({
+    children,
+    required,
+    action,
+}: {
+    children: React.ReactNode
+    required?: boolean
+    action?: React.ReactNode
+}) => (
+    <div className="mb-1 flex items-center justify-between text-xs font-medium text-gray-500">
+        <span>
+            {children}
+            {required && <span className="ml-1 text-red-500">*</span>}
+        </span>
+        {action}
+    </div>
+)
+```
+
+### 表單欄位佈局
+
+使用 12 欄 Grid 系統：
+
+```tsx
+<div className="grid gap-4 lg:grid-cols-12">
+    <div className="lg:col-span-4">
+        <FieldLabel required>客戶</FieldLabel>
+        <Select ... />
+    </div>
+    <div className="lg:col-span-4">
+        <FieldLabel>聯絡人</FieldLabel>
+        <ContactSelect ... />
+    </div>
+    <div className="lg:col-span-4">
+        <FieldLabel>Owner</FieldLabel>
+        <OwnerSelect ... />
+    </div>
+</div>
+```
+
+**參考實作**：
+- 報價單編輯器: `views/sales/quotes/components/QuoteEditorPage.tsx`
+
+---
+
+## 頁面類型總覽
+
+| 頁面類型 | z-index | 用途 | 觸發方式 |
+|---------|---------|------|---------|
+| **Workspace** | - | 模組主頁（列表/Pipeline） | 選單導航 |
+| **詳情頁 Overlay** | z-40 | 預覽/查看詳情 | 點選列表項目 |
+| **完整編輯頁** | z-50 | 複雜表單編輯 | 點擊「編輯」或「建立」 |
+| **Drawer** | z-40 | 簡易操作（工作流程/快速建立） | 按鈕觸發 |
+| **Dialog** | z-50 | 確認/警告對話框 | 操作觸發 |
+

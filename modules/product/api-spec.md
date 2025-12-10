@@ -78,7 +78,7 @@
 | POST | `/api/item-skus` | 新增 SKU | ✅ |
 | PUT/PATCH | `/api/item-skus/{id}` | 編輯 UoM、稅別、條碼、狀態 | ✅ |
 | DELETE | `/api/item-skus/{id}` | 軟刪除 | ✅ |
-| POST | `/api/item-skus/variants` | Variant Generator，輸入維度與值 → 產生多筆 | ⛔ 尚未實作 |
+| POST | `/api/item-skus/variants` | Variant Generator（現階段模擬），輸入維度與值 → 產生多筆 SKU | ⚠️ Mock / 需與後端協作 |
 
 **查詢參數**：`keyword`, `itemId`, `enabled`, `priceListId`, `page`, `size`, `sort`.
 
@@ -187,10 +187,49 @@
 
 ---
 
-## 6. TODO / 待確認
+## 6. Variant Generator API（協助後端串接）
+
+### 輸入（`POST /api/item-skus/variants`）
+
+```json
+{
+  "itemId": 123,
+  "ownerId": 45,
+  "supplyMode": "MTS",
+  "enabled": true,
+  "variantAttributes": [
+    { "attributeCode": "COLOR", "values": ["Red","Blue"] },
+    { "attributeCode": "SIZE", "values": ["S","M"] }
+  ]
+}
+```
+
+- `variantAttributes` 會從 `ItemSkuExtAttrDef`（或 Item 的變體定義）對應 `code` 與使用者輸入的值；每個 `values` 陣列會用來生成 combinator 的 SKU 名稱與 `properties`。  
+- `itemId` + `ownerId` 為必填，會直接關聯到新 SKU； `supplyMode`/`enabled` 會套用到每筆 SKU。
+  
+### 回傳（200 OK / body `ItemSkuDTO[]`）
+
+```json
+[
+  {
+    "skuNo": "TSHIRT-RED-S",
+    "skuName": "素面T恤_紅色_S",
+    "item": { "id": 123, "itemNo": "TSHIRT", "itemName": "素面T恤" },
+    "owner": { "id": 45, "name": "唐老師" },
+    "enabled": true,
+    "supplyMode": "MTS",
+    "properties": "{\"extAttrs\":{\"COLOR\":\"Red\",\"SIZE\":\"S\"}}"
+  },
+  ...
+]
+```
+
+- `properties.extAttrs` 會由 `variantAttributes` 產生的 `code`/`value` 對應，保持與 `SkuEditDrawer` 的 `stringifyExtAttrValues` 格式一致；這樣前端在 `generate` 後直接可以 `loadSkus()` 並呈現新 SKU。
+- 若後端需要避免重複，建議回傳 `ItemSkuDTO` 時同時提供 `conflicts` 或 `warnings` 欄位（可擴充），並在 API 規格中定義 HTTP 409 衝突的 JSON 結構。
+
+## 7. TODO / 待確認
 
 - [ ] 批次匯入/匯出的檔案格式、欄位清單與錯誤回饋。
-- [ ] Variant Generator API 的輸入/輸出定義（可能需返回衝突清單）。
 - [ ] PriceList 權限與審批流程細節（狀態轉換、通知）。
 - [ ] Lookup API 實作。
 - [ ] 庫存、單價欄位目前未從 API 回傳，需評估是否由其他 API 補充。

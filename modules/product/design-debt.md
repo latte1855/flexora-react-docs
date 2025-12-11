@@ -134,6 +134,7 @@ Variant Generator UI 需要的 API 尚未實作：
 - 報價單已客製 `QuotationThreadCriteria`（含 search/ownerScope 等），產品模組也需要自己的 Criteria：`ItemCriteria`、`ItemSkuCriteria`，至少支援 `keyword`（作用在 itemNo/itemName/ownerName）、`ownerScope`、`preset`。
 - 擴充欄位定義請改用產品自己的表：`ItemExtAttrDef`、`ItemSkuExtAttrDef`；若後端尚未提供 endpoint，需新增並讓 UI 改抓此來源（不可重用報價單的 API）。
 - ExtAttrDef 請保留 deleted flag 過濾，並支援排序；若有分群（Item / SKU）可在 API 層處理。
+- 2025-12-14：後端已新增 `ownerName` filter 到 `ItemCriteria` / `ItemSkuCriteria`，並在 QueryService Join owner.name，可用 `ownerName.contains` 進行查詢。
 
 ### 7. 下一階段工作（SKU Workspace / Variant / QA）
 

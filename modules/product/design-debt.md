@@ -121,3 +121,22 @@ Variant Generator UI 需要的 API 尚未實作：
 - 調整 `SKU Workspace` 及 Variant Generator/Drawer 的 props 排序與 hook 依賴；`ProductWorkspace`、`QuoteDetail`、`QuoteEditor` 加入 `useMemo/useCallback` 避免 lint 警告，`QuickCreateDrawer` 的 preview payload 也補充型別。
 - 把 `Button_new` 的 variant 定義抽到 `buttonVariants.ts`，減少 Fast Refresh 警告；同時補上 `buttonVariants` 的 import 確保 `Button` 只輸出 component。
 - `main-github` 已整合上述修改，並透過 `npm run lint` 驗證；若需要進一步紀錄，可在此段落補入屆時的測試/PR 連結。
+
+### 5. 後端 DTO / Transaction 與前端 payload 差異（需對齊）
+
+- Item / ItemSku 的 default flags 需比照報價單流程（normalize flags + apply defaults）：`deleted`/`enabled`/`allowSales`/`maintainStock`/`productBundle` 等欄位目前前端先填預設值，後端 DTO 仍有 NotNull 限制，建議後端補 default 邏輯並允許可空。
+- `extAttrs`：前端 payload 仍使用 `{ extAttrs: { ... } }` 包裝，後端需確認最終儲存格式（保留 extAttrs 包一層），避免因空值導致 400。
+- Transaction API 尚未完成（Item + SKU 同步新增/更新）；目前前端先拆成 item -> itemSku 兩階段呼叫，待後端提供整包 transaction endpoint 後再調整。
+- 欄位映射需列一份對照（ItemDTO / ItemSkuDTO vs 前端表單），避免漏傳：如 `owner`、`itemKind`、`supplyMode`、`defaultSalesQuantity`、`leadTimeInDays` 等。
+
+### 6. ExtAttrDef / Criteria & 專用 API（待落地）
+
+- 報價單已客製 `QuotationThreadCriteria`（含 search/ownerScope 等），產品模組也需要自己的 Criteria：`ItemCriteria`、`ItemSkuCriteria`，至少支援 `keyword`（作用在 itemNo/itemName/ownerName）、`ownerScope`、`preset`。
+- 擴充欄位定義請改用產品自己的表：`ItemExtAttrDef`、`ItemSkuExtAttrDef`；若後端尚未提供 endpoint，需新增並讓 UI 改抓此來源（不可重用報價單的 API）。
+- ExtAttrDef 請保留 deleted flag 過濾，並支援排序；若有分群（Item / SKU）可在 API 層處理。
+
+### 7. 下一階段工作（SKU Workspace / Variant / QA）
+
+- SKU Workspace：依 `ItemSkuDTO` 補齊缺漏欄位，決定列表/卡片的重點欄位，並保留單筆編輯入口；大量 SKU 時考慮分頁 / 虛擬滾動。
+- Variant Generator：整理批次產生 SKU 的 payload（含 base item/owner、dimension values、預設 flags/extAttrs），先在文件確立後再提 BE 實作。
+- QA 清單：建立 Item/ItemSku 建立/編輯/快速建立/變體產生的驗收腳本，包含空白 SKU、缺少 extAttrs、owner 大量資料等異常案例。

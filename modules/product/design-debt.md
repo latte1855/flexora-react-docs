@@ -110,3 +110,14 @@ Variant Generator UI 需要的 API 尚未實作：
 - [spec.md](./spec.md) - 功能規格
 - [ui-spec.md](./ui-spec.md) - UI 規格
 - [api-spec.md](./api-spec.md) - API 規格
+
+---
+
+### 4. 最近 frontend 處理記錄
+
+> 2025/12/14 更新：`fix/lint-errors` branch 已被清理並移除，後續更動會直接回推 `main-github`。
+
+- 完整清理 `Contact`/`Organization`/`Campaign`/`Leads` 的表單/列表元件，補齊型別、搜尋欄位，讓 UI 可直接套用報價式的 preset + filter UX。
+- 調整 `SKU Workspace` 及 Variant Generator/Drawer 的 props 排序與 hook 依賴；`ProductWorkspace`、`QuoteDetail`、`QuoteEditor` 加入 `useMemo/useCallback` 避免 lint 警告，`QuickCreateDrawer` 的 preview payload 也補充型別。
+- 把 `Button_new` 的 variant 定義抽到 `buttonVariants.ts`，減少 Fast Refresh 警告；同時補上 `buttonVariants` 的 import 確保 `Button` 只輸出 component。
+- `main-github` 已整合上述修改，並透過 `npm run lint` 驗證；若需要進一步紀錄，可在此段落補入屆時的測試/PR 連結。
